@@ -1,2 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://tanyunhao.github.io</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://tanyunhao.github.io</link></image><lastBuildDate>Wed, 17 Jul 2024 15:13:00 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>谭云浩</title><link>https://tanyunhao.github.io/post/tan-yun-hao.html</link><description>你好。</description><guid isPermaLink="true">https://tanyunhao.github.io/post/tan-yun-hao.html</guid><pubDate>Wed, 17 Jul 2024 15:12:33 +0000</pubDate></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://tanyunhao.github.io</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://tanyunhao.github.io</link></image><lastBuildDate>Wed, 17 Jul 2024 15:27:47 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>爬虫学习笔记</title><link>https://tanyunhao.github.io/post/pa-chong-xue-xi-bi-ji.html</link><description>import requests  &#13;
+from bs4 import BeautifulSoup  &#13;
+import pandas as pd  &#13;
+  &#13;
+ulist = []  &#13;
+&#13;
+# 爬取的网站的URL  &#13;
+url = 'http://www.gaosan.com/gaokao/241219.html'  &#13;
+response = requests.get(url)  &#13;
+&#13;
+# 编码格式  &#13;
+response.encoding = 'utf-8' &#13;
+&#13;
+# 编译数据  &#13;
+soup = BeautifulSoup(response.text, 'html.parser')&#13;
+&#13;
+'''&#13;
+1. `ulist = []`：创建一个空列表，可能用于存储爬取的数据。</description><guid isPermaLink="true">https://tanyunhao.github.io/post/pa-chong-xue-xi-bi-ji.html</guid><pubDate>Wed, 17 Jul 2024 15:27:16 +0000</pubDate></item><item><title>谭云浩</title><link>https://tanyunhao.github.io/post/tan-yun-hao.html</link><description>你好。</description><guid isPermaLink="true">https://tanyunhao.github.io/post/tan-yun-hao.html</guid><pubDate>Wed, 17 Jul 2024 15:12:33 +0000</pubDate></item></channel></rss>

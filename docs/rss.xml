@@ -1,5 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://tanyunhao.github.io</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://tanyunhao.github.io</link></image><lastBuildDate>Thu, 18 Jul 2024 03:02:34 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>Windows Server部署Vue项目</title><link>https://tanyunhao.github.io/post/Windows%20Server-bu-shu-Vue-xiang-mu.html</link><description>### 前期准备&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://tanyunhao.github.io</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://tanyunhao.github.io</link></image><lastBuildDate>Thu, 18 Jul 2024 06:52:02 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>看山</title><link>https://tanyunhao.github.io/post/kan-shan.html</link><description>山不向我走来&#13;
+我便向山走去&#13;
+不言不语&#13;
+&#13;
+徜徉在云雾间&#13;
+听风低语山川&#13;
+&#13;
+沉默成为最美的语言&#13;
+在山川间轻轻徜徉&#13;
+&#13;
+山依旧默默无言，仿佛对我这突如其来的到访毫无察觉。</description><guid isPermaLink="true">https://tanyunhao.github.io/post/kan-shan.html</guid><pubDate>Thu, 18 Jul 2024 06:51:32 +0000</pubDate></item><item><title>Windows Server部署Vue项目</title><link>https://tanyunhao.github.io/post/Windows%20Server-bu-shu-Vue-xiang-mu.html</link><description>### 前期准备&#13;
 &#13;
 购买服务器 （我选的是windows server)&#13;
 给服务器配置公网ip(弹性ip)&#13;

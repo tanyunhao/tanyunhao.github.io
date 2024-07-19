@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="背景：
+
+日常使用Typora写markdown笔记，会经常插入图片，来帮助理解和整理逻辑。">
+<meta property="og:title" content="使用Typora+picgo-core+gitee实现图床功能">
+<meta property="og:description" content="背景：
+
+日常使用Typora写markdown笔记，会经常插入图片，来帮助理解和整理逻辑。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tanyunhao.github.io/post/shi-yong-Typora%2Bpicgo-core%2Bgitee-shi-xian-tu-chuang-gong-neng.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>使用Typora+picgo-core+gitee实现图床功能</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">使用Typora+picgo-core+gitee实现图床功能</h1>
+<div class="title-right">
+    <a href="https://tanyunhao.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/tanyunhao/tanyunhao.github.io/issues/10" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>背景：</p>
+<p>日常使用Typora写markdown笔记，会经常插入图片，来帮助理解和整理逻辑。</p>
+<p>但是图片保存在本地，上传到网上时，就面临图片不见，或者错误警告等等。</p>
+<p>所以将图片上传到网上，做成一个图床来保证图片的有效性是非常重要的。</p>
+<h3>安装：</h3>
+<ol>
+<li>打开Typora的偏好设置，mac在屏幕最上面的Typora选项，偏好设置，点击图像。</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ed8ee50f245cd0b4015c93621030b0694a22d7d2b9d365e36bf35203687ce385/68747470733a2f2f706963332e7a68696d672e636f6d2f38302f76322d35363234646363616661356639373339646330316437373339633035316533615f31343430772e77656270"><img src="https://camo.githubusercontent.com/ed8ee50f245cd0b4015c93621030b0694a22d7d2b9d365e36bf35203687ce385/68747470733a2f2f706963332e7a68696d672e636f6d2f38302f76322d35363234646363616661356639373339646330316437373339633035316533615f31343430772e77656270" alt="" data-canonical-src="https://pic3.zhimg.com/80/v2-5624dccafa5f9739dc01d7739c051e3a_1440w.webp" style="max-width: 100%;"></a></p>
+<ol start="2">
+<li>
+<p>在上传服务中点击Custom Command</p>
+</li>
+<li>
+<p>打开终端，输入以下命令。</p>
+</li>
+</ol>
+<div class="highlight highlight-source-powershell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span>安装picgo-core（如果没装npm，先安装，centos下是yum install npm）    </span>
+npm install picgo <span class="pl-k">-</span>g    
+
+<span class="pl-c"><span class="pl-c">#</span>查看node和picgo的路径    </span>
+which node    
+which picgo    
+
+<span class="pl-c"><span class="pl-c">#</span>将得到的路径按照以下格式写入第三步的自定义命令中。(中间要有空格)    </span>
+<span class="pl-k">/</span>usr<span class="pl-k">/</span>local<span class="pl-k">/</span>bin<span class="pl-k">/</span>node <span class="pl-k">/</span>usr<span class="pl-k">/</span>local<span class="pl-k">/</span>bin<span class="pl-k">/</span>picgo upload </pre></div>
+<ol start="4">
+<li>
+<p>注册一个码云（gitee）账号</p>
+</li>
+<li>
+<p>创建一个仓库（加号）</p>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/74701f93396a51111977b12b39ce7db54e980ab02efb9f38dc3ef2e88581d8ce/68747470733a2f2f706963342e7a68696d672e636f6d2f38302f76322d63313935393332333731626639636239333631396261343165386462313864335f31343430772e77656270"><img src="https://camo.githubusercontent.com/74701f93396a51111977b12b39ce7db54e980ab02efb9f38dc3ef2e88581d8ce/68747470733a2f2f706963342e7a68696d672e636f6d2f38302f76322d63313935393332333731626639636239333631396261343165386462313864335f31343430772e77656270" alt="" data-canonical-src="https://pic4.zhimg.com/80/v2-c195932371bf9cb93619ba41e8db18d3_1440w.webp" style="max-width: 100%;"></a></p>
+<ol start="6">
+<li>仓库设定</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a3083cd78a13f6e7e740c737898a99b241bba2373a5d5884cc95e8395fd86931/68747470733a2f2f706963332e7a68696d672e636f6d2f38302f76322d65366237393662623839323261616536316362316562313762353765383464325f31343430772e77656270"><img src="https://camo.githubusercontent.com/a3083cd78a13f6e7e740c737898a99b241bba2373a5d5884cc95e8395fd86931/68747470733a2f2f706963332e7a68696d672e636f6d2f38302f76322d65366237393662623839323261616536316362316562313762353765383464325f31343430772e77656270" alt="" data-canonical-src="https://pic3.zhimg.com/80/v2-e6b796bb8922aae61cb1eb17b57e84d2_1440w.webp" style="max-width: 100%;"></a></p>
+<ol start="7">
+<li>新建token，点击头像</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/74701f93396a51111977b12b39ce7db54e980ab02efb9f38dc3ef2e88581d8ce/68747470733a2f2f706963342e7a68696d672e636f6d2f38302f76322d63313935393332333731626639636239333631396261343165386462313864335f31343430772e77656270"><img src="https://camo.githubusercontent.com/74701f93396a51111977b12b39ce7db54e980ab02efb9f38dc3ef2e88581d8ce/68747470733a2f2f706963342e7a68696d672e636f6d2f38302f76322d63313935393332333731626639636239333631396261343165386462313864335f31343430772e77656270" alt="" data-canonical-src="https://pic4.zhimg.com/80/v2-c195932371bf9cb93619ba41e8db18d3_1440w.webp" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/865f3050e24dca75e22d276ef0f03c5c6cc2f501831ef3424aa8e16c84faecac/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d30386563323839323534326330653832336262363233633861343030623932305f31343430772e77656270"><img src="https://camo.githubusercontent.com/865f3050e24dca75e22d276ef0f03c5c6cc2f501831ef3424aa8e16c84faecac/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d30386563323839323534326330653832336262363233633861343030623932305f31343430772e77656270" alt="" data-canonical-src="https://pic1.zhimg.com/80/v2-08ec2892542c0e823bb623c8a400b920_1440w.webp" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c04f95ab7df5977f0758346198a8ff4f0f63f746dd0cf5a44b741893d5ff96eb/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d36353032663963643561613832666233666461366262393538633431383239385f31343430772e77656270"><img src="https://camo.githubusercontent.com/c04f95ab7df5977f0758346198a8ff4f0f63f746dd0cf5a44b741893d5ff96eb/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d36353032663963643561613832666233666461366262393538633431383239385f31343430772e77656270" alt="" data-canonical-src="https://pic1.zhimg.com/80/v2-6502f9cd5aa82fb3fda6bb958c418298_1440w.webp" style="max-width: 100%;"></a></p>
+<ol start="8">
+<li>开始设定picgo配置文件</li>
+</ol>
+<p>打开终端输入以下命令</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span>安装gitee的插件    </span>
+picgo install gitee<span class="pl-k">-</span>uploader 
+
+<span class="pl-c"><span class="pl-c">#</span>设置配置文件    </span>
+picgo set uploader  
+
+<span class="pl-c1">1</span>.按上下键找到gitee，回车    
+<span class="pl-c1">2.</span>repo：用户名<span class="pl-k">/</span>仓库名 （打开自己的仓库，浏览器里的网址username<span class="pl-k">/</span>reponame）    
+<span class="pl-c1">3.</span>token：刚才生成的token    
+<span class="pl-c1">4.</span>path:路径，写仓库的名字就是reponame    
+<span class="pl-c1">5.</span>custompath:不用填，回车   
+<span class="pl-c1">6.</span>customURL:不用填，回车    
+
+<span class="pl-c"><span class="pl-c">#</span>使用配置好的文件（配置文件在~/.picgo/config.json）    </span>
+picgo use uploader</pre></div>
+<ol start="9">
+<li>打开你typora，验证图片上传，查看是否成功。</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/508995d1286cd106787dd196d9123597c0c392f6f0602d603efee5cc68c8d0fe/68747470733a2f2f706963332e7a68696d672e636f6d2f38302f76322d34616564316662613765663538366235316563303166613030303861666632655f31343430772e77656270"><img src="https://camo.githubusercontent.com/508995d1286cd106787dd196d9123597c0c392f6f0602d603efee5cc68c8d0fe/68747470733a2f2f706963332e7a68696d672e636f6d2f38302f76322d34616564316662613765663538366235316563303166613030303861666632655f31343430772e77656270" alt="" data-canonical-src="https://pic3.zhimg.com/80/v2-4aed1fba7ef586b51ec01fa0008aff2e_1440w.webp" style="max-width: 100%;"></a></p>
+<ol start="10">
+<li>成功设置好图床，将一张图片拖到typora中，试一下能否自动上传，注意不要批量上传，会导致错误。</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="https://tanyunhao.github.io"> Blog Title </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","tanyunhao/tanyunhao.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>

@@ -205,10 +205,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <span class="pl-c"># 计算两点之间的欧几里得距离</span>
 <span class="pl-k">def</span> <span class="pl-en">calculate_distance</span>(<span class="pl-s1">x1</span>, <span class="pl-s1">y1</span>, <span class="pl-s1">x2</span>, <span class="pl-s1">y2</span>):
-    <span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-en">sqrt</span>((<span class="pl-s1">x1</span> <span class="pl-c1">-</span> <span class="pl-s1">x2</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span> <span class="pl-c1">+</span> (<span class="pl-s1">y1</span> <span class="pl-c1">-</span> <span class="pl-s1">y2</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span>)
+    <span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-c1">sqrt</span>((<span class="pl-s1">x1</span> <span class="pl-c1">-</span> <span class="pl-s1">x2</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span> <span class="pl-c1">+</span> (<span class="pl-s1">y1</span> <span class="pl-c1">-</span> <span class="pl-s1">y2</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span>)
 
 <span class="pl-c"># 初始化信息素矩阵</span>
-<span class="pl-s1">pheromone_matrix</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-en">ones</span>((<span class="pl-s1">num_stores</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">num_stores</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>))
+<span class="pl-s1">pheromone_matrix</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">ones</span>((<span class="pl-s1">num_stores</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">num_stores</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>))
 
 <span class="pl-c"># ACO算法主函数</span>
 <span class="pl-k">def</span> <span class="pl-en">aco_algorithm</span>():
@@ -225,11 +225,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-s1">costs</span> <span class="pl-c1">=</span> []
         <span class="pl-k">for</span> <span class="pl-s1">ant</span> <span class="pl-c1">in</span> <span class="pl-s1">ants</span>:
             <span class="pl-s1">solution</span>, <span class="pl-s1">cost</span> <span class="pl-c1">=</span> <span class="pl-en">calculate_solution</span>(<span class="pl-s1">ant</span>)
-            <span class="pl-s1">solutions</span>.<span class="pl-en">append</span>(<span class="pl-s1">solution</span>)
-            <span class="pl-s1">costs</span>.<span class="pl-en">append</span>(<span class="pl-s1">cost</span>)
+            <span class="pl-s1">solutions</span>.<span class="pl-c1">append</span>(<span class="pl-s1">solution</span>)
+            <span class="pl-s1">costs</span>.<span class="pl-c1">append</span>(<span class="pl-s1">cost</span>)
         
         <span class="pl-c"># 更新最优解和信息素矩阵</span>
-        <span class="pl-s1">best_idx</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-en">argmin</span>(<span class="pl-s1">costs</span>)
+        <span class="pl-s1">best_idx</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">argmin</span>(<span class="pl-s1">costs</span>)
         <span class="pl-k">if</span> <span class="pl-s1">costs</span>[<span class="pl-s1">best_idx</span>] <span class="pl-c1">&lt;</span> <span class="pl-s1">best_cost</span>:
             <span class="pl-s1">best_solution</span> <span class="pl-c1">=</span> <span class="pl-s1">solutions</span>[<span class="pl-s1">best_idx</span>]
             <span class="pl-s1">best_cost</span> <span class="pl-c1">=</span> <span class="pl-s1">costs</span>[<span class="pl-s1">best_idx</span>]
@@ -248,9 +248,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">for</span> <span class="pl-s1">_</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-s1">num_ants</span>):
         <span class="pl-s1">ant</span> <span class="pl-c1">=</span> [<span class="pl-c1">0</span>]  <span class="pl-c"># 所有蚂蚁从物流中心出发</span>
         <span class="pl-s1">remaining_stores</span> <span class="pl-c1">=</span> <span class="pl-en">list</span>(<span class="pl-en">range</span>(<span class="pl-c1">1</span>, <span class="pl-s1">num_stores</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>))
-        <span class="pl-s1">random</span>.<span class="pl-en">shuffle</span>(<span class="pl-s1">remaining_stores</span>)
-        <span class="pl-s1">ant</span>.<span class="pl-en">extend</span>(<span class="pl-s1">remaining_stores</span>)
-        <span class="pl-s1">ants</span>.<span class="pl-en">append</span>(<span class="pl-s1">ant</span>)
+        <span class="pl-s1">random</span>.<span class="pl-c1">shuffle</span>(<span class="pl-s1">remaining_stores</span>)
+        <span class="pl-s1">ant</span>.<span class="pl-c1">extend</span>(<span class="pl-s1">remaining_stores</span>)
+        <span class="pl-s1">ants</span>.<span class="pl-c1">append</span>(<span class="pl-s1">ant</span>)
     <span class="pl-k">return</span> <span class="pl-s1">ants</span>
 
 <span class="pl-c"># 计算一只蚂蚁的解和成本</span>
@@ -262,17 +262,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     
     <span class="pl-k">for</span> <span class="pl-s1">store</span> <span class="pl-c1">in</span> <span class="pl-s1">ant</span>[<span class="pl-c1">1</span>:]:
         <span class="pl-k">if</span> <span class="pl-s1">current_load</span> <span class="pl-c1">+</span> <span class="pl-s1">demand</span>[<span class="pl-s1">store</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>] <span class="pl-c1">&lt;=</span> <span class="pl-s1">vehicle_capacity</span>:
-            <span class="pl-s1">current_route</span>.<span class="pl-en">append</span>(<span class="pl-s1">store</span>)
+            <span class="pl-s1">current_route</span>.<span class="pl-c1">append</span>(<span class="pl-s1">store</span>)
             <span class="pl-s1">current_load</span> <span class="pl-c1">+=</span> <span class="pl-s1">demand</span>[<span class="pl-s1">store</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>]
         <span class="pl-k">else</span>:
             <span class="pl-s1">total_distance</span> <span class="pl-c1">+=</span> <span class="pl-en">calculate_route_distance</span>(<span class="pl-s1">current_route</span>, <span class="pl-s1">x_coords</span>, <span class="pl-s1">y_coords</span>, <span class="pl-s1">depot_x</span>, <span class="pl-s1">depot_y</span>)
-            <span class="pl-s1">solution</span>.<span class="pl-en">append</span>(<span class="pl-s1">current_route</span>)
+            <span class="pl-s1">solution</span>.<span class="pl-c1">append</span>(<span class="pl-s1">current_route</span>)
             <span class="pl-s1">current_route</span> <span class="pl-c1">=</span> [<span class="pl-c1">0</span>, <span class="pl-s1">store</span>]
             <span class="pl-s1">current_load</span> <span class="pl-c1">=</span> <span class="pl-s1">demand</span>[<span class="pl-s1">store</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>]
     
     <span class="pl-k">if</span> <span class="pl-s1">current_route</span>:
         <span class="pl-s1">total_distance</span> <span class="pl-c1">+=</span> <span class="pl-en">calculate_route_distance</span>(<span class="pl-s1">current_route</span>, <span class="pl-s1">x_coords</span>, <span class="pl-s1">y_coords</span>, <span class="pl-s1">depot_x</span>, <span class="pl-s1">depot_y</span>)
-        <span class="pl-s1">solution</span>.<span class="pl-en">append</span>(<span class="pl-s1">current_route</span>)
+        <span class="pl-s1">solution</span>.<span class="pl-c1">append</span>(<span class="pl-s1">current_route</span>)
     
     <span class="pl-s1">cost</span> <span class="pl-c1">=</span> <span class="pl-s1">total_distance</span> <span class="pl-c1">*</span> <span class="pl-s1">unit_cost</span>
     <span class="pl-k">return</span> <span class="pl-s1">solution</span>, <span class="pl-s1">cost</span>
@@ -306,7 +306,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">for</span> <span class="pl-s1">i</span>, <span class="pl-s1">route</span> <span class="pl-c1">in</span> <span class="pl-en">enumerate</span>(<span class="pl-s1">solution</span>):
         <span class="pl-s1">route_distance</span> <span class="pl-c1">=</span> <span class="pl-en">calculate_route_distance</span>(<span class="pl-s1">route</span>, <span class="pl-s1">x_coords</span>, <span class="pl-s1">y_coords</span>, <span class="pl-s1">depot_x</span>, <span class="pl-s1">depot_y</span>)
         <span class="pl-s1">route_cost</span> <span class="pl-c1">=</span> <span class="pl-s1">route_distance</span> <span class="pl-c1">*</span> <span class="pl-s1">unit_cost</span>
-        <span class="pl-en">print</span>(<span class="pl-s">f"Vehicle <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span> route: 0 -&gt; <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s">' -&gt; '</span>.<span class="pl-en">join</span>(<span class="pl-en">str</span>(<span class="pl-s1">store</span>) <span class="pl-k">for</span> <span class="pl-s1">store</span> <span class="pl-c1">in</span> <span class="pl-s1">route</span>[<span class="pl-c1">1</span>:])<span class="pl-kos">}</span></span> -&gt; 0, Distance: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">route_distance</span><span class="pl-kos">}</span></span>, Cost: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">route_cost</span><span class="pl-kos">}</span></span>"</span>)
+        <span class="pl-en">print</span>(<span class="pl-s">f"Vehicle <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span> route: 0 -&gt; <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s">' -&gt; '</span>.<span class="pl-c1">join</span>(<span class="pl-en">str</span>(<span class="pl-s1">store</span>) <span class="pl-k">for</span> <span class="pl-s1">store</span> <span class="pl-c1">in</span> <span class="pl-s1">route</span>[<span class="pl-c1">1</span>:])<span class="pl-kos">}</span></span> -&gt; 0, Distance: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">route_distance</span><span class="pl-kos">}</span></span>, Cost: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">route_cost</span><span class="pl-kos">}</span></span>"</span>)
     <span class="pl-en">print</span>(<span class="pl-s">f"<span class="pl-cce">\n</span>Total cost: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">cost</span><span class="pl-kos">}</span></span>"</span>)
 
 <span class="pl-c"># 运行算法</span>
@@ -340,7 +340,7 @@ Total cost: <span class="pl-c1">1331.677733989187</span></pre></div>
 
 <span class="pl-c"># 计算两点之间的欧几里得距离</span>
 <span class="pl-k">def</span> <span class="pl-en">calculate_distance</span>(<span class="pl-s1">x1</span>, <span class="pl-s1">y1</span>, <span class="pl-s1">x2</span>, <span class="pl-s1">y2</span>):
-    <span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-en">sqrt</span>((<span class="pl-s1">x1</span> <span class="pl-c1">-</span> <span class="pl-s1">x2</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span> <span class="pl-c1">+</span> (<span class="pl-s1">y1</span> <span class="pl-c1">-</span> <span class="pl-s1">y2</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span>)
+    <span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-c1">sqrt</span>((<span class="pl-s1">x1</span> <span class="pl-c1">-</span> <span class="pl-s1">x2</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span> <span class="pl-c1">+</span> (<span class="pl-s1">y1</span> <span class="pl-c1">-</span> <span class="pl-s1">y2</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span>)
 
 <span class="pl-c"># 贪心算法求解</span>
 <span class="pl-k">def</span> <span class="pl-en">greedy_solution</span>():
@@ -353,15 +353,15 @@ Total cost: <span class="pl-c1">1331.677733989187</span></pre></div>
     
     <span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-s1">sorted_indices</span>:
         <span class="pl-k">if</span> <span class="pl-s1">current_load</span> <span class="pl-c1">+</span> <span class="pl-s1">demand</span>[<span class="pl-s1">i</span>] <span class="pl-c1">&lt;=</span> <span class="pl-s1">vehicle_capacity</span>:
-            <span class="pl-s1">current_route</span>.<span class="pl-en">append</span>(<span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>)
+            <span class="pl-s1">current_route</span>.<span class="pl-c1">append</span>(<span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>)
             <span class="pl-s1">current_load</span> <span class="pl-c1">+=</span> <span class="pl-s1">demand</span>[<span class="pl-s1">i</span>]
         <span class="pl-k">else</span>:
-            <span class="pl-s1">routes</span>.<span class="pl-en">append</span>(<span class="pl-s1">current_route</span>)
+            <span class="pl-s1">routes</span>.<span class="pl-c1">append</span>(<span class="pl-s1">current_route</span>)
             <span class="pl-s1">current_route</span> <span class="pl-c1">=</span> [<span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>]
             <span class="pl-s1">current_load</span> <span class="pl-c1">=</span> <span class="pl-s1">demand</span>[<span class="pl-s1">i</span>]
     
     <span class="pl-k">if</span> <span class="pl-s1">current_route</span>:
-        <span class="pl-s1">routes</span>.<span class="pl-en">append</span>(<span class="pl-s1">current_route</span>)
+        <span class="pl-s1">routes</span>.<span class="pl-c1">append</span>(<span class="pl-s1">current_route</span>)
     
     <span class="pl-c"># 计算总距离和总花费</span>
     <span class="pl-s1">total_distance</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
@@ -378,7 +378,7 @@ Total cost: <span class="pl-c1">1331.677733989187</span></pre></div>
         <span class="pl-s1">route_distance</span> <span class="pl-c1">+=</span> <span class="pl-en">calculate_distance</span>(<span class="pl-s1">prev_x</span>, <span class="pl-s1">prev_y</span>, <span class="pl-s1">depot_x</span>, <span class="pl-s1">depot_y</span>)
         <span class="pl-s1">total_distance</span> <span class="pl-c1">+=</span> <span class="pl-s1">route_distance</span>
         <span class="pl-s1">total_cost</span> <span class="pl-c1">+=</span> <span class="pl-s1">route_distance</span> <span class="pl-c1">*</span> <span class="pl-s1">unit_cost</span>
-        <span class="pl-en">print</span>(<span class="pl-s">f"Vehicle route: 0 -&gt; <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s">' -&gt; '</span>.<span class="pl-en">join</span>(<span class="pl-en">str</span>(<span class="pl-s1">store</span>) <span class="pl-k">for</span> <span class="pl-s1">store</span> <span class="pl-c1">in</span> <span class="pl-s1">route</span>)<span class="pl-kos">}</span></span> -&gt; 0, Distance: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">route_distance</span><span class="pl-kos">}</span></span>, Cost: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">route_distance</span> <span class="pl-c1">*</span> <span class="pl-s1">unit_cost</span><span class="pl-kos">}</span></span>"</span>)
+        <span class="pl-en">print</span>(<span class="pl-s">f"Vehicle route: 0 -&gt; <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s">' -&gt; '</span>.<span class="pl-c1">join</span>(<span class="pl-en">str</span>(<span class="pl-s1">store</span>) <span class="pl-k">for</span> <span class="pl-s1">store</span> <span class="pl-c1">in</span> <span class="pl-s1">route</span>)<span class="pl-kos">}</span></span> -&gt; 0, Distance: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">route_distance</span><span class="pl-kos">}</span></span>, Cost: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">route_distance</span> <span class="pl-c1">*</span> <span class="pl-s1">unit_cost</span><span class="pl-kos">}</span></span>"</span>)
     
     <span class="pl-en">print</span>(<span class="pl-s">f"<span class="pl-cce">\n</span>Total distance: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">total_distance</span><span class="pl-kos">}</span></span>"</span>)
     <span class="pl-en">print</span>(<span class="pl-s">f"Total cost: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">total_cost</span><span class="pl-kos">}</span></span>"</span>)

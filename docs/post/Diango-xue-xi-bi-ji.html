@@ -268,27 +268,27 @@ d<span class="pl-k">-----</span>         <span class="pl-c1">2023</span><span cl
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">django</span>.<span class="pl-s1">db</span> <span class="pl-k">import</span> <span class="pl-s1">models</span>
 
 <span class="pl-c"># Create your models here.</span>
-<span class="pl-k">class</span> <span class="pl-v">Topic</span>(<span class="pl-s1">models</span>.<span class="pl-v">Model</span>):
+<span class="pl-k">class</span> <span class="pl-v">Topic</span>(<span class="pl-s1">models</span>.<span class="pl-c1">Model</span>):
     <span class="pl-s">'''用户学习的主题'''</span>
-    <span class="pl-s1">text</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-v">CharField</span>(<span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-c1">200</span>) <span class="pl-c">#由字符组成的数据</span>
-    <span class="pl-s1">date_added</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-v">DateTimeField</span>(<span class="pl-s1">auto_now_add</span><span class="pl-c1">=</span><span class="pl-c1">True</span>) <span class="pl-c">#记录时间和日期的数据</span>
+    <span class="pl-s1">text</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-c1">CharField</span>(<span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-c1">200</span>) <span class="pl-c">#由字符组成的数据</span>
+    <span class="pl-s1">date_added</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-c1">DateTimeField</span>(<span class="pl-s1">auto_now_add</span><span class="pl-c1">=</span><span class="pl-c1">True</span>) <span class="pl-c">#记录时间和日期的数据</span>
 
     <span class="pl-k">def</span> <span class="pl-en">__str__</span>(<span class="pl-s1">self</span>):
-        <span class="pl-k">return</span> <span class="pl-s1">self</span>.<span class="pl-s1">text</span>
+        <span class="pl-k">return</span> <span class="pl-s1">self</span>.<span class="pl-c1">text</span>
 
-<span class="pl-k">class</span> <span class="pl-v">Entry</span>(<span class="pl-s1">models</span>.<span class="pl-v">Model</span>):
+<span class="pl-k">class</span> <span class="pl-v">Entry</span>(<span class="pl-s1">models</span>.<span class="pl-c1">Model</span>):
     <span class="pl-s">'''学到的有关某个主题的具体知识'''</span>
-    <span class="pl-s1">topic</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-v">ForeignKey</span>(<span class="pl-v">Topic</span>, <span class="pl-s1">on_delete</span><span class="pl-c1">=</span><span class="pl-s1">models</span>.<span class="pl-v">CASCADE</span>)
-    <span class="pl-s1">text</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-v">TextField</span>()
-    <span class="pl-s1">date_added</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-v">DateTimeField</span>(<span class="pl-s1">auto_now_add</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+    <span class="pl-s1">topic</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-c1">ForeignKey</span>(<span class="pl-v">Topic</span>, <span class="pl-s1">on_delete</span><span class="pl-c1">=</span><span class="pl-s1">models</span>.<span class="pl-c1">CASCADE</span>)
+    <span class="pl-s1">text</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-c1">TextField</span>()
+    <span class="pl-s1">date_added</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-c1">DateTimeField</span>(<span class="pl-s1">auto_now_add</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
     <span class="pl-k">class</span> <span class="pl-v">Meta</span>:
         <span class="pl-s1">verbose_name_plural</span> <span class="pl-c1">=</span> <span class="pl-s">'entries'</span>
 
     <span class="pl-k">def</span> <span class="pl-en">__str__</span>(<span class="pl-s1">self</span>):
-        <span class="pl-k">return</span> <span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">self</span>.<span class="pl-s1">text</span>[:<span class="pl-c1">50</span>]<span class="pl-kos">}</span></span>..."</span></pre></div>
+        <span class="pl-k">return</span> <span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">self</span>.<span class="pl-c1">text</span>[:<span class="pl-c1">50</span>]<span class="pl-kos">}</span></span>..."</span></pre></div>
 <h3>(二)激活模型</h3>
 <p>打开setting.py,将</p>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-v">INSTALLED_APPS</span> <span class="pl-c1">=</span> [
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c1">INSTALLED_APPS</span> <span class="pl-c1">=</span> [
     <span class="pl-s">"django.contrib.admin"</span>,
     <span class="pl-s">"django.contrib.auth"</span>,
     <span class="pl-s">"django.contrib.contenttypes"</span>,
@@ -297,7 +297,7 @@ d<span class="pl-k">-----</span>         <span class="pl-c1">2023</span><span cl
     <span class="pl-s">"django.contrib.staticfiles"</span>,
 ]</pre></div>
 <p>修改为：</p>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-v">INSTALLED_APPS</span> <span class="pl-c1">=</span> [
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c1">INSTALLED_APPS</span> <span class="pl-c1">=</span> [
     <span class="pl-c">#我的应用程序</span>
     <span class="pl-s">"learning_logs"</span>,
 
@@ -353,8 +353,8 @@ Migrations <span class="pl-k">for</span> <span class="pl-s"><span class="pl-pds"
 <span class="pl-k">from</span> .<span class="pl-s1">models</span> <span class="pl-k">import</span> <span class="pl-v">Topic</span>,<span class="pl-v">Entry</span>
 
 <span class="pl-c"># Register your models here.</span>
-<span class="pl-s1">admin</span>.<span class="pl-s1">site</span>.<span class="pl-en">register</span>(<span class="pl-v">Topic</span>)
-<span class="pl-s1">admin</span>.<span class="pl-s1">site</span>.<span class="pl-en">register</span>(<span class="pl-v">Entry</span>)</pre></div>
+<span class="pl-s1">admin</span>.<span class="pl-c1">site</span>.<span class="pl-c1">register</span>(<span class="pl-v">Topic</span>)
+<span class="pl-s1">admin</span>.<span class="pl-c1">site</span>.<span class="pl-c1">register</span>(<span class="pl-v">Entry</span>)</pre></div>
 <h4>3、使用超级用户账户访问网站</h4>
 <p>访问如下链接</p>
 <p><a href="http://localhost:8000/admin/" rel="nofollow">http://localhost:8000/admin/</a> （推荐）或者<a href="https://localhost:8000/admin/" rel="nofollow">https://localhost:8000/admin/</a> (不推荐，有可能会打不开)</p>

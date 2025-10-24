@@ -14,6 +14,9 @@
 
 `Gmeek-html<iframe src="//player.bilibili.com/player.html?bvid=BV1AM411R7GL&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
 
+Gmeek-html<iframe style='border-radius:12px' src="//player.bilibili.com/player.html?bvid=BV1AM411R7GL&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="200px"></iframe>
+1
+`Gmeek-html<iframe style='border-radius:12px' src="//player.bilibili.com/player.html?bvid=BV1AM411R7GL&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="200px"></iframe>`
 
 ---
 ## 三、源码下载

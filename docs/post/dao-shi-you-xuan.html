@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 一、绪论
+
+## 1 **、问题背景**
+
+国家优秀青年科学基金和国家杰出青年科学基金是中国科学技术部设立的两个重要科研项目，旨在发现和培养具有创新能力和发展潜力的优秀青年科学家。">
+<meta property="og:title" content="导师优选">
+<meta property="og:description" content="# 一、绪论
+
+## 1 **、问题背景**
+
+国家优秀青年科学基金和国家杰出青年科学基金是中国科学技术部设立的两个重要科研项目，旨在发现和培养具有创新能力和发展潜力的优秀青年科学家。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tanyunhao.github.io/post/dao-shi-you-xuan.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>导师优选</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">导师优选</h1>
+<div class="title-right">
+    <a href="https://tanyunhao.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/tanyunhao/tanyunhao.github.io/issues/3" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>一、绪论</h1>
+<h2>1 <strong>、问题背景</strong></h2>
+<p>国家优秀青年科学基金和国家杰出青年科学基金是中国科学技术部设立的两个重要科研项目，旨在发现和培养具有创新能力和发展潜力的优秀青年科学家。这些基金的设立和资助机制为优秀青年科学家提供了稳定的科研经费支持，激励他们在各自领域取得突破性的科学成果，推动中国科技事业的发展。</p>
+<p>为了更好地了解这些优秀的科研人员的研究方向，本组成员共同完成了近五年国家杰青优青名单数据的搜集、分析与成果展示，以期为我国科研人才管理和培养提供有益的参考。</p>
+<h2>2 <strong>、问题提出</strong></h2>
+<p>基于以上背景，需要建立模型解决以下问题：</p>
+<p>①根据所提供的近五年国家杰青和优青名单，搜集整理对应科研人员的详细信息，并对数据进行初步处理，使之便于后续的分析；</p>
+<p>②对处理后的数据进行特征提取，并对其进行相应的分析和解释；</p>
+<p>③选择合适的机器学习算法对科研人员进行分类，并通过各项指标对模型性能进行评估；</p>
+<p>④根据分析所得到的结果，对我国科研人才的管理和培养提出建议。</p>
+<h1>二、数据预处理</h1>
+<p>结合近五年国家杰青和优青名单，通过在网络上查找相关资料，本文对数据进行了二次补充。其中补充的个人属性包括：本科学校、硕士学校、博士学校、职称、论文H指数、成果数量、学校排名、出生年份等。在本文中，“成果数量”一项的数据以“科研之友”网站上的数据为准，“学校排名”以文件“university_new.xlsx”为准。由于有部分科研人员的出生年份无法在网络上查到准确的数据，因此本文以他们的“本科入学年份 - 18”代替他们的出生年份。同时，为了便于后续模型的建立，本文将科研人员的研究方向进行了类别划分，具体的划分规则如下：</p>
+<p>A类：机械控制，包括机械、仪器仪表、自动化控制、工程、交通、建筑等</p>
+<p>B类：信息技术，包括计算机、电信、通讯、电子等</p>
+<p>C类：数理学科，包括数学、物理、地球与空间科学等</p>
+<p>D类：生命科学，包括生物、农学、药学、医学、健康、卫生、食品等</p>
+<p>E类：能源化工，包括能源、材料、石油、化学、化工、生态、环保等</p>
+<p>F类：不属于以上任何一类的其他研究方向</p>
+<p>经过上述处理，发现有部分科研学者的信息并不完整。对数据进行清洗、去重和格式化处理，得到预处理后的数据（详见附件“data_final.xlsx”）。</p>
+<h1>三、特征工程</h1>
+<p>对预处理后的数据进行分析。为了便于后续模型的构建，本文将“主任医师”等价为“教授”，“教授级高级工程师”等价为“教授”， “副主任医师”等价为“副教授”，“副主任”等价为“教授”， “主任”等价为“教授”；对于年龄未知的科研人员，统一将其年龄设置为40岁；用学校排名代替学校名称，若排名未知，则设置为“-1”。</p>
+<p>通过上述处理，可以提取出以下特征：姓名、年份、类型、职称、论文H指数、成果数量、学校排名、年龄、研究方向（A、B、C、D、E、F）、博士学校排名、硕士学校排名、本科学校排名、学校层次（985、211、双非）。</p>
+<h1>四、模型构建</h1>
+<p>通过查阅资料可知，聚类算法有：原型聚类（K-means，学习向量化，高斯混合聚类等）、密度聚类、层次聚类等方法。本文采用了pycaret库中自带的聚类算法进行比较，以得到最佳的模型。</p>
+<p>Pycaret库提供了以下聚类方法，其代号和各自的特点分别如表1所示：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>名称</th>
+<th>简写</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>K-Means 聚类</td>
+<td>kmeans</td>
+<td>是一种基于距离的聚类算法，它试图将数据划分为预定义的聚类数量，并最小化每个聚类内部的平方误差</td>
+</tr>
+<tr>
+<td>Affinity Propagation 聚类</td>
+<td>ap</td>
+<td>是一种基于数据点之间的“亲和力”的聚类算法，不需要预先设定聚类的数量</td>
+</tr>
+<tr>
+<td>Mean Shift 聚类</td>
+<td>meanshift</td>
+<td>是一种基于密度的聚类算法，它试图找到数据的密度峰值作为聚类中心</td>
+</tr>
+<tr>
+<td>Spectral Clustering 聚类</td>
+<td>sc</td>
+<td>是一种基于图论的聚类算法，它试图找到数据的最优划分，使得划分后的子集之间的相似度最小</td>
+</tr>
+<tr>
+<td>Hierarchical Clustering 聚类</td>
+<td>hclust</td>
+<td>是一种基于层次的聚类算法，它可以生成一个聚类树，用户可以在任何层次上划分聚类</td>
+</tr>
+<tr>
+<td>DBSCAN 聚类</td>
+<td>dbscan</td>
+<td>是一种基于密度的聚类算法，它可以发现任意形状的聚类，并能够处理噪声数据点</td>
+</tr>
+<tr>
+<td>OPTICS 聚类</td>
+<td>optics</td>
+<td>是一种基于密度的聚类算法，它是 DBSCAN 的一种改进，可以处理不同密度的聚类</td>
+</tr>
+<tr>
+<td>BIRCH 聚类</td>
+<td>birch</td>
+<td>是一种基于层次和密度的聚类算法，它特别适合处理大数据集</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>表1</strong></p>
+<p>首先，需要从这些模型中选出几种较为可靠的方法。在不设置分类类别数的前提下，对所有数据进行聚类，观察各种模型的聚类效果，结果如表2所示：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>模型</th>
+<th>丢弃原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kmeans</td>
+<td>4个分类，不集中在某一类</td>
+</tr>
+<tr>
+<td>hclust</td>
+<td>4个分类，不集中在某一类</td>
+</tr>
+<tr>
+<td>birch</td>
+<td>4个分类，不集中在某一类</td>
+</tr>
+<tr>
+<td>ap</td>
+<td>分类过多</td>
+</tr>
+<tr>
+<td>meanshift</td>
+<td>分类过多，而且高度集中在其中一类</td>
+</tr>
+<tr>
+<td>sc</td>
+<td>只有两类，而且高度集中在一类</td>
+</tr>
+<tr>
+<td>dbscan</td>
+<td>没有进行聚类，只有一类</td>
+</tr>
+<tr>
+<td>optics</td>
+<td>分类过多，高度集中在一类</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>表2</strong></p>
+<p>因此，本文采用kmeans、hclust和birch三种聚类方法进行聚类。</p>
+<p>由于本次聚类为非监督学习，并不知道各科研人员的实际类别，因此本文选用Silhouette、Calinski-Harabasz和Davies-Bouldin这三个指标来衡量聚类的紧密性和分离性。对kmeans、hclust、birch的分类效果进行评估，结果如表3所示：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th><strong>Silhouette</strong></th>
+<th><strong>Calinski-Harabasz</strong></th>
+<th><strong>Davies-Bouldin</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kmeans</td>
+<td>0.0703</td>
+<td>5.2811</td>
+<td>3.4326</td>
+</tr>
+<tr>
+<td>hclust</td>
+<td>0.0580</td>
+<td>5.4526</td>
+<td>3.6743</td>
+</tr>
+<tr>
+<td>birch</td>
+<td>0.0596</td>
+<td>5.4919</td>
+<td>3.6955</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>表3</strong></p>
+<p>经过上述分析，本文采用kmeans、hclust和birch三种聚类方法对科研人员进行分类，其中每一种聚类都将所有人员分为四类：王者、星耀、钻石、铂金。对每位科研人员，取出现次数最多的段位作为其最终段位；若其三次分类的结果互不相同，则取kmeans聚类的段位作为其最终段位。</p>
+<p>将该模型进行保存，以便进行后续的预测</p>
+<h1>五、模型评估与优化</h1>
+<p>我们得到了两种参数很优秀的模型，Naïve Bayes (NB)和Extra Trees Classifier (ET)。下面对这两种模型进行评估。</p>
+<h2>1.Naive Bayes</h2>
+<h3>（1）AUC</h3>
+<p>AUC曲线下的面积是一个用于评估分类模型性能的指标，值介于0和1之间。AUC接近1意味着模型在区分正负样本上做得非常好，即真正例率（TPR）高，假正例率（FPR）低，表明这个模型在这四个类别的预测上都表现出了很高的准确性。该模型的AUC曲线如图1所示。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234036190.png"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234036190.png" alt="image-20240101234036190" style="max-width: 100%;"></a></p>
+<p><strong>图1</strong></p>
+<p>可以看到，四个类的AUC曲线的面积都接近1，意味着该模型在四个类别上的表现都非常好。</p>
+<h3>（2）混淆矩阵</h3>
+<p>该模型的混淆矩阵如图2所示：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image004.gif"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image004.gif" alt="标题: fig:" style="max-width: 100%;"></a></p>
+<p><strong>图2</strong></p>
+<p>在这个4x4的混淆矩阵中：</p>
+<p>第一行表示所有实际为第一类的样本，其中，5个被正确地预测为第一类，1个被错误地预测为第二类，没有被错误地预测为第三类和第四类；</p>
+<p>第二行表示所有实际为第二类的样本，其中，21个被正确地预测为第二类，没有被错误地预测为其他类别；</p>
+<p>第三行表示所有实际为第三类的样本，其中，10个被正确地预测为第三类，没有被错误地预测为其他类别；</p>
+<p>第四行表示所有实际为第四类的样本，其中，1个被正确地预测为第四类，1个被错误地预测为第三类，没有被错误地预测为第一类和第二类。</p>
+<p>从混淆矩阵可以看出，绝大部分的预测都是正确的（主对角线上的值较大），只有极少数的预测是错误的（非对角线上的值较小），说明该模型的性能很好。</p>
+<h3>（3）学习曲线</h3>
+<p>该模型的学习曲线如图3所示：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234100740.png"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234100740.png" alt="image-20240101234100740" style="max-width: 100%;"></a></p>
+<p><strong>图3</strong></p>
+<p>从该模型的学习曲线中可以看出，训练分数和交叉验证分数都接近1，表明模型在训练集和验证集上的表现都很好。该模型的训练分数比交叉验证分数高，意味着模型对训练数据可能有过拟合，但是这种情况下的过拟合程度不高，因为交叉验证分数也很高。由此可以推测，这种情况的出现可能是因为训练数据较少。</p>
+<h3>（4）性能评估</h3>
+<p>图4为该模型的性能评估结果，其中precision是模型对每个类别的精确度，即预测为该类别的样本中真正为该类别的比例；recall是模型对每个类别的召回率，即真正的该类别的样本中被预测为该类别的比例；f1-score是精确度和召回率的调和平均值，可以被视为模型的综合性能指标；support是每个类别的真实样本数量。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234121969.png"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234121969.png" alt="image-20240101234121969" style="max-width: 100%;"></a></p>
+<p><strong>图4</strong></p>
+<p>由此可见，该模型所划分的cluster0、cluster1和cluster2性能好，cluster3的性能较差。</p>
+<h2>2.Extra Trees Classifier</h2>
+<h3>（1）AUC</h3>
+<p>该模型的AUC曲线如图5所示。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234136201.png"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234136201.png" alt="image-20240101234136201" style="max-width: 100%;"></a></p>
+<p><strong>图5</strong></p>
+<p>可以看到，四个类的AUC曲线的面积都接近1，意味着该模型在四个类别上的表现都非常好。</p>
+<h3>（2）混淆矩阵</h3>
+<p>该模型的混淆矩阵如图6所示：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234146412.png"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234146412.png" alt="image-20240101234146412" style="max-width: 100%;"></a></p>
+<p><strong>图6</strong></p>
+<p>从混淆矩阵可以看出，绝大部分的预测都是正确的（主对角线上的值较大），只有极少数的预测是错误的（非对角线上的值较小），说明该模型的性能很好。</p>
+<h3>（3）学习曲线</h3>
+<p>该模型的学习曲线如图7所示：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234201433.png"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234201433.png" alt="image-20240101234201433" style="max-width: 100%;"></a></p>
+<p><strong>图7</strong></p>
+<p>该模型的学习曲线与Naïve Bayes的学习曲线类似，均有部分过拟合的现象出现，可能是因为训练数据较少。</p>
+<h3>（4）性能评估</h3>
+<p>图8为该模型的性能评估结果：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234212405.png"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240101234212405.png" alt="image-20240101234212405" style="max-width: 100%;"></a></p>
+<p><strong>图8</strong></p>
+<p>由此可见，该模型的整体性能较好。</p>
+<h1>六、结果分析与应用</h1>
+<p>通过上述模型的建立与评估，可以得出，Naïve Bayes是更适合此数据的模型。同时，我们提供了对科研人员的类型进行预测的功能，也建立了UI以实现科研人员信息查找的功能。下面，本文将对这两种应用方式进行简要介绍。</p>
+<p>①关于UI的使用说明</p>
+<p>运行文件“UI.py”（界面如图9所示），选择相应的功能后，按提示输入所要查询的内容，点击查找便可得到符合条件的科研人员的信息，包括姓名、出生年份、教育经历、杰青/优青、职称、研究方向等。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image002.jpg"><img title="" src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image002.jpg" alt="img" style="max-width: 100%;"></a></p>
+<p><strong>图9</strong></p>
+<p>②关于预测功能文件“prediction.ipynb”的说明</p>
+<p>该文件在运行时会加载“ML.ipynb”中得到的最优模型，并利用该模型对已预处理好的需要预测类别的数据进行分类，并将输出的结果作为预测结果。随后，该程序会将预测结果添加到原始数据中，并将预测结果保存为新文件。</p>
+<p>上述所提到的程序均会在附件中给出。</p>
+<h1>七、总结与展望</h1>
+<p>现如今，伴随着新一轮科技革命与产业变革持续深入，各学科研究领域日益扩大，朝着精细化、多元化的方向发展，此外，社会对学科交叉型人才的需求日趋明显，这使得大学本科生在申请导师时面临更多选择。我们不难在各大社会媒体中发现，高校中由于选择不适合自己的专业、导师而丧失学习兴趣的事例屡见不鲜，这足以引起社会的关注。当然，我们能够看到，众多互联网厂商和教育平台已经开始打造为大学生选择研究生导师、专业的平台，但普遍实用性不大，缺少系统性。作为一名大学生，我们更能了解同学们的需求，希望能打造一款数据全面，能同时满足同学们对导师专业、导师性格、导师能力、导师职称等全方面多维度的考量，真正做到操作简单，数据可信，实用价值高。当然，我们的模型仍然存在着许多问题。未来，我们将着手解决上述问题，使我们的模型能够真正运用到实际生活中去。</p>
+<p>科研人才的管理和培养对于国家科研事业的发展至关重要，我们也结合分析的结果，提出了一些建议：</p>
+<p>①加强基础科研人才培养：加大对基础科学研究的支持力度，提供更多的资金和资源，鼓励年轻人从事基础科研工作；建立并完善科研人员评价制度，注重对基础科学研究的认可和奖励，培养更多的杰出科学家。</p>
+<p>②推进跨学科交叉培养：鼓励和支持不同学科领域之间的合作和交流，培养具有跨学科背景的科研人才；设立跨学科研究项目，并提供相应的奖励和支持，以激励科研人员积极参与跨学科研究。</p>
+<p>③加强科研团队建设：提供更多对科研项目支持和优惠政策，吸引高水平的科研团队和人才加入，营造积极向上的科研氛围。</p>
+<p>④建立科学合理的科研评价体系：注重绩效评估和成果转化，不仅要考虑科研成果的数量，还要关注科研质量、影响力和创新能力等方面的表现。</p>
+<p>⑤加强国际交流与合作：鼓励科研人员参与国际学术交流和合作项目，提供更多的留学和出国交流机会；引进国际先进科研人才和管理经验，促进国内外科研人才的互动和合作，提升我国科研水平。</p>
+<p>⑥加大科研人才培养投入：增加对科研人才培养的投入，提供更多的奖学金、科研项目资助和实习机会；建立科研人才培养基地和科研实践基地，提供科研人才培养的平台和机会。</p>
+<h1>八、参考文献</h1>
+<p>[1] 周志华.机器学习[M].清华大学出版社,2016.</p>
+<p>[2] 王凯, 王益华, &amp; 李辉. (2012). 基于多项式朴素贝叶斯的中文情感分类研究.《计算机应用研究》，29(8)，2932-2934.</p>
+<p>[3] Jain, A. K. , and R. C. Dubes . "Algorithms for clustering data." Technometrics32.2(1988):227-229.</p>
+<p>[4] 司守奎,孙玺菁.数学建模算法与应用[M].国防工业出版社,2022.</p>
+<h1>九、代码</h1>
+<p>1、模型的部分代码如下，完整代码请参考附件“ML.ipynb”</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">pandas</span> <span class="pl-k">as</span> <span class="pl-s1">pd</span>
+<span class="pl-k">import</span> <span class="pl-s1">numpy</span> <span class="pl-k">as</span> <span class="pl-s1">np</span>
+<span class="pl-k">import</span> <span class="pl-s1">matplotlib</span>.<span class="pl-s1">pyplot</span> <span class="pl-k">as</span> <span class="pl-s1">plt</span>
+<span class="pl-k">import</span> <span class="pl-s1">seaborn</span> <span class="pl-k">as</span> <span class="pl-s1">sns</span>
+<span class="pl-k">import</span> <span class="pl-s1">warnings</span>
+
+<span class="pl-s1">warnings</span>.<span class="pl-c1">filterwarnings</span>(<span class="pl-s">'ignore'</span>)
+
+<span class="pl-s1">data</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_excel</span>(<span class="pl-s">'data_final.xlsx'</span>)
+
+<span class="pl-c"># 删除姓名列</span>
+<span class="pl-s1">data</span>.<span class="pl-c1">drop</span>([<span class="pl-s">'姓名'</span>], <span class="pl-s1">axis</span><span class="pl-c1">=</span><span class="pl-c1">1</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">data</span>.<span class="pl-c1">head</span>()
+
+<span class="pl-k">from</span> <span class="pl-s1">pycaret</span>.<span class="pl-s1">clustering</span> <span class="pl-k">import</span> <span class="pl-c1">*</span>
+
+<span class="pl-c"># 对数据进行标准化，忽略特征'MouseID'</span>
+<span class="pl-s1">exp_clu101</span> <span class="pl-c1">=</span> <span class="pl-en">setup</span>(<span class="pl-s1">data</span>, <span class="pl-s1">normalize</span><span class="pl-c1">=</span><span class="pl-c1">True</span>, <span class="pl-s1">ignore_features</span><span class="pl-c1">=</span>[<span class="pl-s">'姓名'</span>], <span class="pl-s1">session_id</span><span class="pl-c1">=</span><span class="pl-c1">123</span>)
+
+<span class="pl-s1">kmeans</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'kmeans'</span>)
+<span class="pl-en">print</span>(<span class="pl-s1">kmeans</span>)
+
+<span class="pl-s1">kmean_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">kmeans</span>)
+
+<span class="pl-en">plot_model</span>(<span class="pl-s1">kmeans</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">kmeans</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'elbow'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">kmeans</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'silhouette'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">kmeans</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'distribution'</span>)
+
+<span class="pl-s1">ap</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'ap'</span>)
+<span class="pl-s1">ap_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">ap</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">ap</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">ap</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'distribution'</span>)
+
+<span class="pl-s1">birch</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'birch'</span>, <span class="pl-s1">num_clusters</span><span class="pl-c1">=</span><span class="pl-c1">3</span>)
+
+<span class="pl-s1">meanshift</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'meanshift'</span>)
+<span class="pl-s1">meanshift_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">meanshift</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">meanshift</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">meanshift</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'distribution'</span>)
+
+<span class="pl-s1">sc</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'sc'</span>)
+<span class="pl-s1">sc_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">sc</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">sc</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">sc</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'elbow'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">sc</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'distribution'</span>)
+
+<span class="pl-s1">hclust</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'hclust'</span>)
+<span class="pl-s1">hclust_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">hclust</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">hclust</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">hclust</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'elbow'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">hclust</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'distribution'</span>)
+
+<span class="pl-s1">dbscan</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'dbscan'</span>)
+<span class="pl-s1">dbscan_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">dbscan</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">dbscan</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">dbscan</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'distribution'</span>)
+
+<span class="pl-s1">optics</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'optics'</span>)
+<span class="pl-s1">optics_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">optics</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">optics</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">optics</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'distribution'</span>)
+
+<span class="pl-s1">birch</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'birch'</span>)
+<span class="pl-s1">birch_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">birch</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">birch</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">birch</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'elbow'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">birch</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'silhouette'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">birch</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'distribution'</span>)
+
+<span class="pl-c"># 导出kmeans、hclust、birch的聚类结果,导出时将姓名列加入</span>
+<span class="pl-s1">kmeans_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">kmeans</span>)
+<span class="pl-s1">kmeans_results</span>.<span class="pl-c1">to_excel</span>(<span class="pl-s">'kmeans_results.xlsx'</span>)
+
+<span class="pl-s1">hclust_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">hclust</span>)
+<span class="pl-s1">hclust_results</span>.<span class="pl-c1">to_excel</span>(<span class="pl-s">'hclust_results.xlsx'</span>)
+
+<span class="pl-s1">birch_results</span> <span class="pl-c1">=</span> <span class="pl-en">assign_model</span>(<span class="pl-s1">birch</span>)
+<span class="pl-s1">birch_results</span>.<span class="pl-c1">to_excel</span>(<span class="pl-s">'birch_results.xlsx'</span>)
+
+<span class="pl-c"># 训练分类模型</span>
+<span class="pl-c"># 读取聚类结果</span>
+<span class="pl-s1">data_kmeans</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_excel</span>(<span class="pl-s">'kmeans_results.xlsx'</span>)
+<span class="pl-s1">data_hclust</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_excel</span>(<span class="pl-s">'hclust_results.xlsx'</span>)
+<span class="pl-s1">data_birch</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_excel</span>(<span class="pl-s">'birch_results.xlsx'</span>)
+
+<span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">data_kmeans</span>
+<span class="pl-s1">result</span>.<span class="pl-c1">head</span>()
+
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_birch'</span>] <span class="pl-c1">=</span> <span class="pl-s1">data_birch</span>[<span class="pl-s">'Cluster'</span>]
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_hclust'</span>] <span class="pl-c1">=</span> <span class="pl-s1">data_hclust</span>[<span class="pl-s">'Cluster'</span>]
+
+<span class="pl-c"># 把Cluster改为Cluster_kmeans</span>
+<span class="pl-s1">result</span>.<span class="pl-c1">rename</span>(<span class="pl-s1">columns</span><span class="pl-c1">=</span>{<span class="pl-s">'Cluster'</span>: <span class="pl-s">'Cluster_kmeans'</span>}, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>.<span class="pl-c1">head</span>()
+
+<span class="pl-en">print</span>(<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_kmeans'</span>].<span class="pl-c1">unique</span>())
+
+<span class="pl-s">'''</span>
+<span class="pl-s">Kmeans表里面</span>
+<span class="pl-s">王者 cluster1</span>
+<span class="pl-s">星耀cluster2</span>
+<span class="pl-s">钻石 cluster0</span>
+<span class="pl-s">铂金 cluster3</span>
+<span class="pl-s">'''</span>
+
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_kmeans'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 0'</span>, <span class="pl-s">'钻石'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_kmeans'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 1'</span>, <span class="pl-s">'王者'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_kmeans'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 2'</span>, <span class="pl-s">'星耀'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_kmeans'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 3'</span>, <span class="pl-s">'铂金'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>.<span class="pl-c1">head</span>()
+
+<span class="pl-s">'''</span>
+<span class="pl-s">Hclust表里面</span>
+<span class="pl-s">王者 cluster0</span>
+<span class="pl-s">星耀 cluster2</span>
+<span class="pl-s">钻石 cluster1</span>
+<span class="pl-s">铂金 cluster3</span>
+<span class="pl-s">'''</span>
+
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_hclust'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 1'</span>, <span class="pl-s">'钻石'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_hclust'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 0'</span>, <span class="pl-s">'王者'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_hclust'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 2'</span>, <span class="pl-s">'星耀'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_hclust'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 3'</span>, <span class="pl-s">'铂金'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>.<span class="pl-c1">head</span>()
+
+<span class="pl-s">'''</span>
+<span class="pl-s">Birch表里面</span>
+<span class="pl-s">王者 cluster1</span>
+<span class="pl-s">星耀 cluster0</span>
+<span class="pl-s">钻石 cluster2</span>
+<span class="pl-s">铂金 cluster3</span>
+<span class="pl-s">'''</span>
+
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_birch'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 2'</span>, <span class="pl-s">'钻石'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_birch'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 1'</span>, <span class="pl-s">'王者'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_birch'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 0'</span>, <span class="pl-s">'星耀'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_birch'</span>].<span class="pl-c1">replace</span>(<span class="pl-s">'Cluster 3'</span>, <span class="pl-s">'铂金'</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>.<span class="pl-c1">head</span>()
+
+<span class="pl-c"># 对Cluster_birch、Cluster_hclust、Cluster_kmeans三列，求每一行的众数，赋值给result['Label']</span>
+<span class="pl-s1">result</span>[<span class="pl-s">'Label'</span>] <span class="pl-c1">=</span> <span class="pl-s1">result</span>[[<span class="pl-s">'Cluster_birch'</span>, <span class="pl-s">'Cluster_hclust'</span>, <span class="pl-s">'Cluster_kmeans'</span>]].<span class="pl-c1">mode</span>(<span class="pl-s1">axis</span><span class="pl-c1">=</span><span class="pl-c1">1</span>)[<span class="pl-c1">0</span>]
+
+<span class="pl-c"># 如果没有众数，使用 Cluster_kmeans 的值作为默认值</span>
+<span class="pl-s1">result</span>[<span class="pl-s">'Label'</span>].<span class="pl-c1">fillna</span>(<span class="pl-s1">result</span>[<span class="pl-s">'Cluster_kmeans'</span>], <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>.<span class="pl-c1">head</span>()
+
+<span class="pl-c"># 删除Cluster_kmeans、Cluster_hclust、Cluster_birch三列</span>
+<span class="pl-s1">result</span>.<span class="pl-c1">drop</span>([<span class="pl-s">'Cluster_kmeans'</span>, <span class="pl-s">'Cluster_hclust'</span>, <span class="pl-s">'Cluster_birch'</span>], <span class="pl-s1">axis</span><span class="pl-c1">=</span><span class="pl-c1">1</span>, <span class="pl-s1">inplace</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">result</span>.<span class="pl-c1">head</span>()
+
+<span class="pl-s1">result</span>.<span class="pl-c1">info</span>()
+
+<span class="pl-s">'''</span>
+<span class="pl-s">---  ------   --------------  -----</span>
+<span class="pl-s"> 0  年份     194 non-null   int64 </span>
+<span class="pl-s"> 1  论文H指数   194 non-null   int64 </span>
+<span class="pl-s"> 2  成果数量    194 non-null   int64 </span>
+<span class="pl-s"> 3  学校排名    194 non-null   object</span>
+<span class="pl-s"> 4  博士学校排名   194 non-null   int64 </span>
+<span class="pl-s"> 5  硕士学校排名   194 non-null   int64 </span>
+<span class="pl-s"> 6  本科学校排名   194 non-null   int64 </span>
+<span class="pl-s"> 7  职称_副教授   194 non-null   bool  </span>
+<span class="pl-s"> 8  职称_副研究员  194 non-null   bool </span>
+<span class="pl-s"> 9  职称_助理教授  194 non-null   bool </span>
+<span class="pl-s"> 10  职称_教授   194 non-null   bool  </span>
+<span class="pl-s"> 11  职称_研究员   194 non-null   bool  </span>
+<span class="pl-s"> 12  职称_讲师   194 non-null   bool  </span>
+<span class="pl-s"> 13  类型_优青   194 non-null   bool  </span>
+<span class="pl-s"> 14  类型_杰青   194 non-null   bool  </span>
+<span class="pl-s"> 15  研究方向_A   194 non-null   bool  </span>
+<span class="pl-s"> 16  研究方向_B   194 non-null   bool  </span>
+<span class="pl-s"> 17  研究方向_C   194 non-null   bool  </span>
+<span class="pl-s"> 18  研究方向_D   194 non-null   bool  </span>
+<span class="pl-s"> 19  研究方向_E   194 non-null   bool  </span>
+<span class="pl-s"> 20  研究方向_F   194 non-null   bool  </span>
+<span class="pl-s"> 21  学校层次_211  194 non-null   bool  </span>
+<span class="pl-s"> 22  学校层次_985  194 non-null   bool  </span>
+<span class="pl-s"> 23  学校层次_双非  194 non-null   bool </span>
+<span class="pl-s"> 24  年龄     194 non-null   int64 </span>
+<span class="pl-s"> 25  Label   194 non-null   object</span>
+<span class="pl-s"> '''</span>
+
+<span class="pl-c"># result中只保留上面的列</span>
+<span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">result</span>[[<span class="pl-s">'年份'</span>, <span class="pl-s">'论文H指数'</span>, <span class="pl-s">'成果数量'</span>, <span class="pl-s">'学校排名'</span>, <span class="pl-s">'博士学校排名'</span>, <span class="pl-s">'硕士学校排名'</span>, <span class="pl-s">'本科学校排名'</span>,
+                 <span class="pl-s">'职称_副教授'</span>, <span class="pl-s">'职称_副研究员'</span>, <span class="pl-s">'职称_助理教授'</span>, <span class="pl-s">'职称_教授'</span>, <span class="pl-s">'职称_研究员'</span>, <span class="pl-s">'职称_讲师'</span>,
+                 <span class="pl-s">'类型_优青'</span>, <span class="pl-s">'类型_杰青'</span>, <span class="pl-s">'研究方向_A'</span>, <span class="pl-s">'研究方向_B'</span>, <span class="pl-s">'研究方向_C'</span>, <span class="pl-s">'研究方向_D'</span>,
+                 <span class="pl-s">'研究方向_E'</span>, <span class="pl-s">'研究方向_F'</span>, <span class="pl-s">'学校层次_211'</span>, <span class="pl-s">'学校层次_985'</span>, <span class="pl-s">'学校层次_双非'</span>, <span class="pl-s">'年龄'</span>, <span class="pl-s">'Label'</span>]]
+
+<span class="pl-c"># 导出result</span>
+<span class="pl-s1">result</span>.<span class="pl-c1">to_excel</span>(<span class="pl-s">'result.xlsx'</span>)
+
+<span class="pl-c"># 设置分类任务</span>
+<span class="pl-k">from</span> <span class="pl-s1">pycaret</span>.<span class="pl-s1">classification</span> <span class="pl-k">import</span> <span class="pl-c1">*</span>
+
+<span class="pl-s1">s</span> <span class="pl-c1">=</span> <span class="pl-en">setup</span>(<span class="pl-s1">result</span>, <span class="pl-s1">target</span><span class="pl-c1">=</span><span class="pl-s">'Label'</span>, <span class="pl-s1">session_id</span><span class="pl-c1">=</span><span class="pl-c1">123</span>, <span class="pl-s1">train_size</span><span class="pl-c1">=</span><span class="pl-c1">0.8</span>, <span class="pl-s1">fold</span><span class="pl-c1">=</span><span class="pl-c1">10</span>)
+
+<span class="pl-c"># 比较模型</span>
+<span class="pl-s1">best</span> <span class="pl-c1">=</span> <span class="pl-en">compare_models</span>()
+<span class="pl-en">print</span>(<span class="pl-s1">best</span>)
+
+<span class="pl-c"># 打印模型的参数</span>
+<span class="pl-en">print</span>(<span class="pl-s1">best</span>.<span class="pl-c1">get_params</span>())
+
+<span class="pl-c"># Analyze Model</span>
+<span class="pl-en">evaluate_model</span>(<span class="pl-s1">best</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">best</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'auc'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">best</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'confusion_matrix'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">best</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'learning'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">best</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'pr'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">best</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'class_report'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">best</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'boundary'</span>)
+<span class="pl-en">save_model</span>(<span class="pl-s1">best</span>, <span class="pl-s">'nb_pipeline'</span>)
+
+<span class="pl-c"># 查看et模型</span>
+<span class="pl-s1">et</span> <span class="pl-c1">=</span> <span class="pl-en">create_model</span>(<span class="pl-s">'et'</span>)
+<span class="pl-en">print</span>(<span class="pl-s1">et</span>)
+<span class="pl-en">evaluate_model</span>(<span class="pl-s1">et</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">et</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'auc'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">et</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'confusion_matrix'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">et</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'learning'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">et</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'pr'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">et</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'class_report'</span>)
+<span class="pl-en">plot_model</span>(<span class="pl-s1">et</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'boundary'</span>)
+
+<span class="pl-c"># 画出feature importance</span>
+<span class="pl-c"># 设置字体</span>
+<span class="pl-s1">plt</span>.<span class="pl-c1">rcParams</span>[<span class="pl-s">'font.sans-serif'</span>] <span class="pl-c1">=</span> [<span class="pl-s">'SimHei'</span>]
+<span class="pl-en">plot_model</span>(<span class="pl-s1">et</span>, <span class="pl-s1">plot</span><span class="pl-c1">=</span><span class="pl-s">'feature'</span>)
+<span class="pl-en">save_model</span>(<span class="pl-s1">et</span>, <span class="pl-s">'et_pipeline'</span>)</pre></div>
+<p>2.预测代码见附件“prediction.ipynb”</p>
+<p>3.UI代码见附件“UI.py”</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://tanyunhao.github.io">谭云浩</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","tanyunhao/tanyunhao.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>

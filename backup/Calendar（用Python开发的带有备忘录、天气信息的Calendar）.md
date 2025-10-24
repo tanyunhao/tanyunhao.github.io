@@ -12,7 +12,7 @@
 ---
 ## 二、演示视频
 
-`Gmeek-html<iframe style='border-radius:12px' src="//player.bilibili.com/player.html?bvid=BV1AM411R7GL&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="100%"></iframe>`
+`Gmeek-html<iframe src="https://www.bilibili.com/video/BV1AM411R7GL/" allow="fullscreen" allowfullscreen="" style="height:100%;width:100%; aspect-ratio: 4 / 3; "></iframe>`
 
 ---
 ## 三、源码下载
@@ -47,5 +47,3 @@ pip install -r requirements.txt
 ![image.png](https://raw.githubusercontent.com/tanyunhao/picture/master/picture/20241025213723.png)
 ![image.png](https://raw.githubusercontent.com/tanyunhao/picture/master/picture/20241025213748.png)
 ![image.png](https://raw.githubusercontent.com/tanyunhao/picture/master/picture/20241025213820.png)
-
-`Gmeek-html<iframe src="https://www.bilibili.com/video/BV1AM411R7GL/" allow="fullscreen" allowfullscreen="" style="height:100%;width:100%; aspect-ratio: 4 / 3; "></iframe>`

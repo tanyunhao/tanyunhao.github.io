@@ -47,3 +47,5 @@ pip install -r requirements.txt
 ![image.png](https://raw.githubusercontent.com/tanyunhao/picture/master/picture/20241025213723.png)
 ![image.png](https://raw.githubusercontent.com/tanyunhao/picture/master/picture/20241025213748.png)
 ![image.png](https://raw.githubusercontent.com/tanyunhao/picture/master/picture/20241025213820.png)
+
+`Gmeek-html<iframe src="https://www.bilibili.com/video/BV1AM411R7GL/" allow="fullscreen" allowfullscreen="" style="height:100%;width:100%; aspect-ratio: 4 / 3; "></iframe>`

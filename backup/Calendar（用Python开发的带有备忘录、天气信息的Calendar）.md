@@ -11,7 +11,9 @@
 
 ---
 ## 二、演示视频
-https://www.bilibili.com/video/BV1AM411R7GL/
+
+Gmeek-html<iframe src="//player.bilibili.com/player.html?bvid=BV1AM411R7GL&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
 ---
 ## 三、源码下载
 

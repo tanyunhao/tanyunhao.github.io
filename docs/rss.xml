@@ -1,5 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>谭云浩</title><link>https://tanyunhao.github.io</link><description>童话是一种生活态度，仅此而已。</description><copyright>谭云浩</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/tanyunhao/picture/master/简约小人开心大笑_爱给网_aigei_com.gif</url><title>avatar</title><link>https://tanyunhao.github.io</link></image><lastBuildDate>Fri, 24 Oct 2025 13:18:04 +0000</lastBuildDate><managingEditor>谭云浩</managingEditor><ttl>60</ttl><webMaster>谭云浩</webMaster><item><title>华中科技大学计算机组成原理实验</title><link>https://tanyunhao.github.io/post/hua-zhong-ke-ji-da-xue-ji-suan-ji-zu-cheng-yuan-li-shi-yan.html</link><description># 1.资源介绍
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>谭云浩</title><link>https://tanyunhao.github.io</link><description>童话是一种生活态度，仅此而已。</description><copyright>谭云浩</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/tanyunhao/picture/master/简约小人开心大笑_爱给网_aigei_com.gif</url><title>avatar</title><link>https://tanyunhao.github.io</link></image><lastBuildDate>Wed, 29 Oct 2025 16:07:42 +0000</lastBuildDate><managingEditor>谭云浩</managingEditor><ttl>60</ttl><webMaster>谭云浩</webMaster><item><title>影院票务管理系统oracle</title><link>https://tanyunhao.github.io/post/ying-yuan-piao-wu-guan-li-xi-tong-oracle.html</link><description>
+源码下载分享https://www.123865.com/ps/WlFzVv-3Kuph
+用户表:编号，用户名，密码，邮箱，角色，用户头像；
+
+影片表：编号，影片名称，国外名称，演职人员，导演，电影详情，电影时长，电影类型，电影评分，票房，电影参评人数，上映时间，制片地区，电影海报地址，电影状态；
+
+影院表：编号，影院名称，影院地址；
+
+放映厅表：编号，放映厅名称，放映厅容量，所属影院编号；
+
+订单表：编号，所属用户编号，所属场次编号，电影票座位信息，订单状态，订单价格，订单支付时间，所属用户对象；
+
+订单详情表：编号，所属放映厅，放映的电影编号，电影放映时间，售价，剩余座位数，场次状态，所属放映厅对象，放映的电影；
+
+评论表：编号，所属用户编号，评论内容，所属电影编号，评论时间，所属用户，评分；
+
+# 1 需求分析
+## 1.1 用户管理模块  
+&lt;font style='color:rgb(64,64,64);background-color:rgb(255,255,255);'&gt;用户管理模块提供完整的账户生命周期管理，支持新用户通过邮箱验证进行注册登录，允许用户维护个人信息（包括头像修改和密码更新），实施基于角色的权限控制（区分普通用户、影院管理员和系统管理员），并记录用户活动历史（如登录时间、购票记录等），确保账户安全性和操作可追溯性。</description><guid isPermaLink="true">https://tanyunhao.github.io/post/ying-yuan-piao-wu-guan-li-xi-tong-oracle.html</guid><pubDate>Wed, 29 Oct 2025 16:07:11 +0000</pubDate></item><item><title>华中科技大学计算机组成原理实验</title><link>https://tanyunhao.github.io/post/hua-zhong-ke-ji-da-xue-ji-suan-ji-zu-cheng-yuan-li-shi-yan.html</link><description># 1.资源介绍
 
 包含四个实验：
 - **数据表达实验**

@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://raw.githubusercontent.com/tanyunhao/picture/master/简约小人开心大笑_爱给网_aigei_com.gif"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="
+源码下载分享https://www.123865.com/ps/WlFzVv-3Kuph
+用户表:编号，用户名，密码，邮箱，角色，用户头像；
+
+影片表：编号，影片名称，国外名称，演职人员，导演，电影详情，电影时长，电影类型，电影评分，票房，电影参评人数，上映时间，制片地区，电影海报地址，电影状态；
+
+影院表：编号，影院名称，影院地址；
+
+放映厅表：编号，放映厅名称，放映厅容量，所属影院编号；
+
+订单表：编号，所属用户编号，所属场次编号，电影票座位信息，订单状态，订单价格，订单支付时间，所属用户对象；
+
+订单详情表：编号，所属放映厅，放映的电影编号，电影放映时间，售价，剩余座位数，场次状态，所属放映厅对象，放映的电影；
+
+评论表：编号，所属用户编号，评论内容，所属电影编号，评论时间，所属用户，评分；
+
+# 1 需求分析
+## 1.1 用户管理模块  
+<font style='color:rgb(64,64,64);background-color:rgb(255,255,255);'>用户管理模块提供完整的账户生命周期管理，支持新用户通过邮箱验证进行注册登录，允许用户维护个人信息（包括头像修改和密码更新），实施基于角色的权限控制（区分普通用户、影院管理员和系统管理员），并记录用户活动历史（如登录时间、购票记录等），确保账户安全性和操作可追溯性。">
+<meta property="og:title" content="影院票务管理系统oracle">
+<meta property="og:description" content="
+源码下载分享https://www.123865.com/ps/WlFzVv-3Kuph
+用户表:编号，用户名，密码，邮箱，角色，用户头像；
+
+影片表：编号，影片名称，国外名称，演职人员，导演，电影详情，电影时长，电影类型，电影评分，票房，电影参评人数，上映时间，制片地区，电影海报地址，电影状态；
+
+影院表：编号，影院名称，影院地址；
+
+放映厅表：编号，放映厅名称，放映厅容量，所属影院编号；
+
+订单表：编号，所属用户编号，所属场次编号，电影票座位信息，订单状态，订单价格，订单支付时间，所属用户对象；
+
+订单详情表：编号，所属放映厅，放映的电影编号，电影放映时间，售价，剩余座位数，场次状态，所属放映厅对象，放映的电影；
+
+评论表：编号，所属用户编号，评论内容，所属电影编号，评论时间，所属用户，评分；
+
+# 1 需求分析
+## 1.1 用户管理模块  
+<font style='color:rgb(64,64,64);background-color:rgb(255,255,255);'>用户管理模块提供完整的账户生命周期管理，支持新用户通过邮箱验证进行注册登录，允许用户维护个人信息（包括头像修改和密码更新），实施基于角色的权限控制（区分普通用户、影院管理员和系统管理员），并记录用户活动历史（如登录时间、购票记录等），确保账户安全性和操作可追溯性。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tanyunhao.github.io/post/ying-yuan-piao-wu-guan-li-xi-tong-oracle.html">
+<meta property="og:image" content="https://raw.githubusercontent.com/tanyunhao/picture/master/简约小人开心大笑_爱给网_aigei_com.gif">
+<title>影院票务管理系统oracle</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">影院票务管理系统oracle</h1>
+<div class="title-right">
+    <a href="https://tanyunhao.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/tanyunhao/tanyunhao.github.io/issues/5" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>源码下载分享<a href="https://www.123865.com/ps/WlFzVv-3Kuph" rel="nofollow">https://www.123865.com/ps/WlFzVv-3Kuph</a><br>
+用户表:编号，用户名，密码，邮箱，角色，用户头像；</p>
+<p>影片表：编号，影片名称，国外名称，演职人员，导演，电影详情，电影时长，电影类型，电影评分，票房，电影参评人数，上映时间，制片地区，电影海报地址，电影状态；</p>
+<p>影院表：编号，影院名称，影院地址；</p>
+<p>放映厅表：编号，放映厅名称，放映厅容量，所属影院编号；</p>
+<p>订单表：编号，所属用户编号，所属场次编号，电影票座位信息，订单状态，订单价格，订单支付时间，所属用户对象；</p>
+<p>订单详情表：编号，所属放映厅，放映的电影编号，电影放映时间，售价，剩余座位数，场次状态，所属放映厅对象，放映的电影；</p>
+<p>评论表：编号，所属用户编号，评论内容，所属电影编号，评论时间，所属用户，评分；</p>
+<h1>1 需求分析</h1>
+<h2>1.1 用户管理模块</h2>
+<p>用户管理模块提供完整的账户生命周期管理，支持新用户通过邮箱验证进行注册登录，允许用户维护个人信息（包括头像修改和密码更新），实施基于角色的权限控制（区分普通用户、影院管理员和系统管理员），并记录用户活动历史（如登录时间、购票记录等），确保账户安全性和操作可追溯性。</p>
+<h2>1.2 影片管理模块</h2>
+<p>影片管理模块负责维护电影全生命周期数据，包括影片基本信息（名称、导演、时长、类型等）的增删改查，管理影片上映状态（即将上映/热映/已下架），提供多维度搜索筛选功能（按类型、评分、地区等），自动生成票房统计报表，并支持电影海报的上传与展示。</p>
+<h2>1.3 影院管理模块</h2>
+<p>影院管理模块实现影院资源的数字化管理，维护影院基础信息（名称、地址等），配置放映厅参数（名称、座位容量），通过地图API展示影院地理分布，并统计各影院场次安排数据（如每日排片量、上座率等），为影院资源调度提供数据支持。</p>
+<h2>1.4 场次管理模块</h2>
+<p>场次管理模块提供放映计划的全流程管理，支持创建/修改影厅放映计划（时间、影厅），设置动态票价策略（分时段差异化定价），实现可视化座位图展示，自动监控并更新场次状态（可预订/即将售罄/已售罄），并通过冲突检测机制防止同一影厅时间重叠排片。</p>
+<h2>1.5 订单管理模块</h2>
+<p>订单管理模块实现票务交易闭环，支持在线选座购票流程，集成模拟支付系统（支持支付宝/微信等支付方式），管理订单全生命周期状态（待支付/已支付/已取消），提供用户订单历史查询功能，并处理退票业务（含退款规则计算）。</p>
+<h2>1.6 评论管理模块</h2>
+<p>评论管理模块构建影片评价体系，允许用户发表评分和文字评论，实施先审后发的审核机制，支持评论互动功能（点赞/回复），自动生成评论分析报告（包含评分分布、热词分析等），并实时更新影片综合评分数据。</p>
+<h1>2 系统设计</h1>
+<h2>2.1 系统结构功能图</h2>
+<p>根据需求分析，确定系统结构功能如图2-1所示：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/834584595af4393fc2f01177c7c38be8552c76e3a58a7a8cec83a6dd1312a483/68747470733a2f2f692d626c6f672e6373646e696d672e636e2f696d675f636f6e766572742f30396362363566626131353236376534343936656564623934616438303234392e706e67"><img src="https://camo.githubusercontent.com/834584595af4393fc2f01177c7c38be8552c76e3a58a7a8cec83a6dd1312a483/68747470733a2f2f692d626c6f672e6373646e696d672e636e2f696d675f636f6e766572742f30396362363566626131353236376534343936656564623934616438303234392e706e67" alt="" data-canonical-src="https://i-blog.csdnimg.cn/img_convert/09cb65fba15267e4496eedb94ad80249.png" style="max-width: 100%;"></a></p>
+<p>图2-1 系统功能结构图</p>
+<h2>2.2 功能流程图</h2>
+<p>系统最主要的功能就是管理员登录之后对各种功能的使用。管理员功能如图4-2所示。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a028fc9fa562657e521362bc5264c775a74dd40b36cfeb668b8222589b1691d6/68747470733a2f2f692d626c6f672e6373646e696d672e636e2f696d675f636f6e766572742f66333438323561366131616265373337653364383961336363643735346663342e706e67"><img src="https://camo.githubusercontent.com/a028fc9fa562657e521362bc5264c775a74dd40b36cfeb668b8222589b1691d6/68747470733a2f2f692d626c6f672e6373646e696d672e636e2f696d675f636f6e766572742f66333438323561366131616265373337653364383961336363643735346663342e706e67" alt="" data-canonical-src="https://i-blog.csdnimg.cn/img_convert/f34825a6a1abe737e3d89a3ccd754fc4.png" style="max-width: 100%;"></a></p>
+<p>图2-2 管理员登录管理流程</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c10678b198e91cd28600e9fecc7990cc1b4c3c8e5955f640d5d9025bb0c9f443/68747470733a2f2f692d626c6f672e6373646e696d672e636e2f696d675f636f6e766572742f66643935393832366631323764396439333134623661313936393131656632652e706e67"><img src="https://camo.githubusercontent.com/c10678b198e91cd28600e9fecc7990cc1b4c3c8e5955f640d5d9025bb0c9f443/68747470733a2f2f692d626c6f672e6373646e696d672e636e2f696d675f636f6e766572742f66643935393832366631323764396439333134623661313936393131656632652e706e67" alt="" data-canonical-src="https://i-blog.csdnimg.cn/img_convert/fd959826f127d9d9314b6a196911ef2e.png" style="max-width: 100%;"></a></p>
+<p>图2-3普通用户登录流程</p>
+<h2>2.3 数据库设计</h2>
+<p>整体功能的E-R图如图2-4所示。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e9d33641bb2b99aa6169fbfabfe87285d8843d1401d47c724c89c19aa9861610/68747470733a2f2f692d626c6f672e6373646e696d672e636e2f696d675f636f6e766572742f30613339303064373133356435393062656531616139363664356463373531312e706e67"><img src="https://camo.githubusercontent.com/e9d33641bb2b99aa6169fbfabfe87285d8843d1401d47c724c89c19aa9861610/68747470733a2f2f692d626c6f672e6373646e696d672e636e2f696d675f636f6e766572742f30613339303064373133356435393062656531616139363664356463373531312e706e67" alt="" data-canonical-src="https://i-blog.csdnimg.cn/img_convert/0a3900d7135d590bee1aa966d5dc7511.png" style="max-width: 100%;"></a></p>
+<p>图2-4 系统E-R图</p>
+<p>本系统包含的数据表如下：</p>
+<p><strong>1书架类型表 (shelf_types)</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shelf_type_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>书架类型ID</td>
+</tr>
+<tr>
+<td>shelf_type_name</td>
+<td>VARCHAR2</td>
+<td>非空</td>
+<td>50</td>
+<td>否</td>
+<td>-</td>
+<td>书架类型名称</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>2读者类型表 (reader_types)</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reader_type_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>读者类型ID</td>
+</tr>
+<tr>
+<td>reader_type_name</td>
+<td>VARCHAR2</td>
+<td>非空</td>
+<td>50</td>
+<td>否</td>
+<td>-</td>
+<td>读者类型名称</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>3书架表 (shelves)</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shelf_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>书架ID</td>
+</tr>
+<tr>
+<td>shelf_number</td>
+<td>VARCHAR2</td>
+<td>非空</td>
+<td>20</td>
+<td>否</td>
+<td>-</td>
+<td>书架编号</td>
+</tr>
+<tr>
+<td>shelf_type_id</td>
+<td>NUMBER</td>
+<td>外键且非空</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>书架类型ID</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>4工作人员表 (staff)</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>staff_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>工作人员ID</td>
+</tr>
+<tr>
+<td>staff_name</td>
+<td>VARCHAR2</td>
+<td>非空</td>
+<td>100</td>
+<td>否</td>
+<td>-</td>
+<td>工作人员姓名</td>
+</tr>
+<tr>
+<td>staff_position</td>
+<td>VARCHAR2</td>
+<td>非空</td>
+<td>50</td>
+<td>否</td>
+<td>-</td>
+<td>工作人员职位</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>5图书表 (books)</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>book_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>图书ID</td>
+</tr>
+<tr>
+<td>title</td>
+<td>VARCHAR2</td>
+<td>非空</td>
+<td>200</td>
+<td>否</td>
+<td>-</td>
+<td>图书标题</td>
+</tr>
+<tr>
+<td>author</td>
+<td>VARCHAR2</td>
+<td>非空</td>
+<td>100</td>
+<td>否</td>
+<td>-</td>
+<td>图书作者</td>
+</tr>
+<tr>
+<td>isbn</td>
+<td>VARCHAR2</td>
+<td>唯一且非空</td>
+<td>20</td>
+<td>否</td>
+<td>-</td>
+<td>图书国际标准书号</td>
+</tr>
+<tr>
+<td>publication_year</td>
+<td>NUMBER</td>
+<td>可空</td>
+<td>-</td>
+<td>是</td>
+<td>-</td>
+<td>出版年份</td>
+</tr>
+<tr>
+<td>shelf_id</td>
+<td>NUMBER</td>
+<td>外键且非空</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>书架ID</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>6读者表 (readers)</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reader_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>读者ID</td>
+</tr>
+<tr>
+<td>reader_name</td>
+<td>VARCHAR2</td>
+<td>非空</td>
+<td>100</td>
+<td>否</td>
+<td>-</td>
+<td>读者姓名</td>
+</tr>
+<tr>
+<td>reader_type_id</td>
+<td>NUMBER</td>
+<td>外键且非空</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>读者类型ID</td>
+</tr>
+<tr>
+<td>contact_phone</td>
+<td>VARCHAR2</td>
+<td>可空</td>
+<td>15</td>
+<td>是</td>
+<td>-</td>
+<td>联系电话</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>7正借阅表 (loans)</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>loan_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>借阅记录ID</td>
+</tr>
+<tr>
+<td>book_id</td>
+<td>NUMBER</td>
+<td>外键且非空</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>图书ID</td>
+</tr>
+<tr>
+<td>reader_id</td>
+<td>NUMBER</td>
+<td>外键且非空</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>读者ID</td>
+</tr>
+<tr>
+<td>loan_date</td>
+<td>DATE</td>
+<td>非空</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>借书日期</td>
+</tr>
+<tr>
+<td>due_date</td>
+<td>DATE</td>
+<td>非空</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>应还日期</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>8已还书籍表 (returns)</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>return_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>还书记录ID</td>
+</tr>
+<tr>
+<td>loan_id</td>
+<td>NUMBER</td>
+<td>外键</td>
+<td>-</td>
+<td>是</td>
+<td>-</td>
+<td>借阅记录ID</td>
+</tr>
+<tr>
+<td>return_date</td>
+<td>DATE</td>
+<td>非空</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>还书日期</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>9****通知记录表（overdue_notifications）</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>notification_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>通知记录</td>
+</tr>
+<tr>
+<td>loan_id</td>
+<td>NUMBER</td>
+<td>外键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>借阅记录 ID</td>
+</tr>
+<tr>
+<td>reader_id</td>
+<td>NUMBER</td>
+<td>外键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>读者 ID</td>
+</tr>
+<tr>
+<td>notification_date</td>
+<td>DATE</td>
+<td>日期</td>
+<td>-</td>
+<td>是</td>
+<td>SYSDATE</td>
+<td>通知日期</td>
+</tr>
+<tr>
+<td>message</td>
+<td>VARCHAR2</td>
+<td>字符串</td>
+<td>500</td>
+<td>是</td>
+<td>-</td>
+<td>通知内容</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>10****历史记录表（book_location_history）</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>列名</th>
+<th>数据类型</th>
+<th>字段类型</th>
+<th>长度</th>
+<th>是否为空</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>history_id</td>
+<td>NUMBER</td>
+<td>主键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>历史记录</td>
+</tr>
+<tr>
+<td>book_id</td>
+<td>NUMBER</td>
+<td>外键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>图书 ID</td>
+</tr>
+<tr>
+<td>old_shelf_id</td>
+<td>NUMBER</td>
+<td>外键</td>
+<td>-</td>
+<td>是</td>
+<td>-</td>
+<td>旧书架 ID</td>
+</tr>
+<tr>
+<td>new_shelf_id</td>
+<td>NUMBER</td>
+<td>外键</td>
+<td>-</td>
+<td>否</td>
+<td>-</td>
+<td>新书架 ID</td>
+</tr>
+<tr>
+<td>change_date</td>
+<td>DATE</td>
+<td>日期</td>
+<td>-</td>
+<td>是</td>
+<td>SYSDATE</td>
+<td>变更日期</td>
+</tr>
+<tr>
+<td>changed_by</td>
+<td>NUMBER</td>
+<td>外键</td>
+<td>-</td>
+<td>是</td>
+<td>-</td>
+<td>操作人 ID</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h1><strong>3 SQL实现</strong></h1>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 创建用户表</span>
+CREATE TABLE 用户表 (
+    编号 <span class="pl-k">NUMBER</span> GENERATED BY DEFAULT <span class="pl-k">AS</span> IDENTITY <span class="pl-k">PRIMARY KEY</span>,
+    用户名 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>) <span class="pl-k">NOT NULL</span>,
+    密码 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>) <span class="pl-k">NOT NULL</span>,
+    邮箱 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>) UNIQUE <span class="pl-k">NOT NULL</span>,
+    角色 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">50</span>) <span class="pl-k">NOT NULL</span>,
+    用户头像 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">255</span>)
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 创建影片表</span>
+CREATE TABLE 影片表 (
+    编号 <span class="pl-k">NUMBER</span> GENERATED BY DEFAULT <span class="pl-k">AS</span> IDENTITY <span class="pl-k">PRIMARY KEY</span>,
+    影片名称 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">200</span>) <span class="pl-k">NOT NULL</span>,
+    国外名称 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">200</span>),
+    演职人员 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">500</span>),
+    导演 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>),
+    电影详情 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">1000</span>),
+    电影时长 <span class="pl-k">NUMBER</span>, <span class="pl-c"><span class="pl-c">--</span> 电影时长（以分钟为单位）</span>
+    电影类型 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>),
+    电影评分 <span class="pl-k">NUMBER</span> <span class="pl-k">CHECK</span> (电影评分 BETWEEN <span class="pl-c1">0</span> <span class="pl-k">AND</span> <span class="pl-c1">10</span>),
+    票房 <span class="pl-k">NUMBER</span>,
+    电影参评人数 <span class="pl-k">NUMBER</span>,
+    上映时间 <span class="pl-k">DATE</span>,
+    制片地区 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>),
+    电影海报地址 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">255</span>),
+    电影状态 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">50</span>) <span class="pl-c"><span class="pl-c">--</span> 电影状态，例如正在上映或已下架</span>
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 创建影院表</span>
+CREATE TABLE 影院表 (
+    编号 <span class="pl-k">NUMBER</span> GENERATED BY DEFAULT <span class="pl-k">AS</span> IDENTITY <span class="pl-k">PRIMARY KEY</span>,
+    影院名称 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>) <span class="pl-k">NOT NULL</span>,
+    影院地址 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">255</span>) <span class="pl-k">NOT NULL</span>
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 创建放映厅表</span>
+CREATE TABLE 放映厅表 (
+    编号 <span class="pl-k">NUMBER</span> GENERATED BY DEFAULT <span class="pl-k">AS</span> IDENTITY <span class="pl-k">PRIMARY KEY</span>,
+    放映厅名称 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>) <span class="pl-k">NOT NULL</span>,
+    放映厅容量 <span class="pl-k">NUMBER</span> <span class="pl-k">NOT NULL</span>,
+    所属影院编号 <span class="pl-k">NUMBER</span>,
+    <span class="pl-k">FOREIGN KEY</span> (所属影院编号) <span class="pl-k">REFERENCES</span> 影院表(编号)
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 创建订单详情表</span>
+CREATE TABLE 订单详情表 (
+    编号 <span class="pl-k">NUMBER</span> GENERATED BY DEFAULT <span class="pl-k">AS</span> IDENTITY <span class="pl-k">PRIMARY KEY</span>,
+    所属放映厅 <span class="pl-k">NUMBER</span>,
+    放映的电影编号 <span class="pl-k">NUMBER</span>,
+    电影放映时间 <span class="pl-k">DATE</span>,
+    售价 <span class="pl-k">NUMBER</span> <span class="pl-k">NOT NULL</span>,
+    剩余座位数 <span class="pl-k">NUMBER</span> <span class="pl-k">NOT NULL</span>,
+    场次状态 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">50</span>), <span class="pl-c"><span class="pl-c">--</span> 可预订、已售罄等状态</span>
+    <span class="pl-k">FOREIGN KEY</span> (所属放映厅) <span class="pl-k">REFERENCES</span> 放映厅表(编号),
+    <span class="pl-k">FOREIGN KEY</span> (放映的电影编号) <span class="pl-k">REFERENCES</span> 影片表(编号)
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 创建订单表</span>
+CREATE TABLE 订单表 (
+    编号 <span class="pl-k">NUMBER</span> GENERATED BY DEFAULT <span class="pl-k">AS</span> IDENTITY <span class="pl-k">PRIMARY KEY</span>,
+    所属用户编号 <span class="pl-k">NUMBER</span>,
+    所属场次编号 <span class="pl-k">NUMBER</span>,
+    电影票座位信息 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">500</span>), <span class="pl-c"><span class="pl-c">--</span> 存储座位信息</span>
+    订单状态 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">50</span>),
+    订单价格 <span class="pl-k">NUMBER</span> <span class="pl-k">NOT NULL</span>,
+    订单支付时间 <span class="pl-k">DATE</span>,
+    <span class="pl-k">FOREIGN KEY</span> (所属用户编号) <span class="pl-k">REFERENCES</span> 用户表(编号),
+    <span class="pl-k">FOREIGN KEY</span> (所属场次编号) <span class="pl-k">REFERENCES</span> 订单详情表(编号)
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 创建评论表</span>
+CREATE TABLE 评论表 (
+    编号 <span class="pl-k">NUMBER</span> GENERATED BY DEFAULT <span class="pl-k">AS</span> IDENTITY <span class="pl-k">PRIMARY KEY</span>,
+    所属用户编号 <span class="pl-k">NUMBER</span>,
+    评论内容 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">1000</span>),
+    所属电影编号 <span class="pl-k">NUMBER</span>,
+    评论时间 <span class="pl-k">DATE</span> DEFAULT <span class="pl-k">SYSDATE</span>,
+    所属用户 <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>),
+    评分 <span class="pl-k">NUMBER</span> <span class="pl-k">CHECK</span> (评分 BETWEEN <span class="pl-c1">0</span> <span class="pl-k">AND</span> <span class="pl-c1">10</span>),
+    <span class="pl-k">FOREIGN KEY</span> (所属用户编号) <span class="pl-k">REFERENCES</span> 用户表(编号),
+    <span class="pl-k">FOREIGN KEY</span> (所属电影编号) <span class="pl-k">REFERENCES</span> 影片表(编号)
+);
+
+</pre></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 用户表索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_username</span> <span class="pl-k">ON</span> 用户表 (用户名);
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_email</span> <span class="pl-k">ON</span> 用户表 (邮箱);
+
+<span class="pl-c"><span class="pl-c">--</span> 影片表索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_movie_name</span> <span class="pl-k">ON</span> 影片表 (影片名称);
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_director</span> <span class="pl-k">ON</span> 影片表 (导演);
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_movie_rating</span> <span class="pl-k">ON</span> 影片表 (电影评分);
+
+<span class="pl-c"><span class="pl-c">--</span> 影院表索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_cinema_name</span> <span class="pl-k">ON</span> 影院表 (影院名称);
+
+<span class="pl-c"><span class="pl-c">--</span> 放映厅表索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_screening_room_name</span> <span class="pl-k">ON</span> 放映厅表 (放映厅名称);
+
+<span class="pl-c"><span class="pl-c">--</span> 订单表索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_user_id</span> <span class="pl-k">ON</span> 订单表 (所属用户编号);
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_showtime_id</span> <span class="pl-k">ON</span> 订单表 (所属场次编号);
+
+<span class="pl-c"><span class="pl-c">--</span> 订单详情表索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_hall_id</span> <span class="pl-k">ON</span> 订单详情表 (所属放映厅);
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_movie_id</span> <span class="pl-k">ON</span> 订单详情表 (放映的电影编号);
+
+<span class="pl-c"><span class="pl-c">--</span> 评论表索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_user_id_comment</span> <span class="pl-k">ON</span> 评论表 (所属用户编号);
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_movie_id_comment</span> <span class="pl-k">ON</span> 评论表 (所属电影编号);</pre></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 创建用户信息视图</span>
+CREATE VIEW 用户信息视图 <span class="pl-k">AS</span>
+<span class="pl-k">SELECT</span> 编号 <span class="pl-k">AS</span> 用户编号, 用户名, 邮箱, 角色
+<span class="pl-k">FROM</span> 用户表;
+
+<span class="pl-c"><span class="pl-c">--</span> 创建正在上映电影视图</span>
+CREATE VIEW 正在上映电影视图 <span class="pl-k">AS</span>
+<span class="pl-k">SELECT</span> 编号 <span class="pl-k">AS</span> 电影编号, 影片名称, 上映时间, 票房, 电影状态
+<span class="pl-k">FROM</span> 影片表
+<span class="pl-k">WHERE</span> 电影状态 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>正在上映<span class="pl-pds">'</span></span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 创建影院放映厅信息视图</span>
+CREATE VIEW 影院放映厅信息视图 <span class="pl-k">AS</span>
+<span class="pl-k">SELECT</span> c.编号 <span class="pl-k">AS</span> 影院编号, c.影院名称, c.影院地址, 
+       r.编号 <span class="pl-k">AS</span> 放映厅编号, r.放映厅名称, r.放映厅容量
+<span class="pl-k">FROM</span> 影院表 c
+<span class="pl-k">JOIN</span> 放映厅表 r <span class="pl-k">ON</span> c.编号 <span class="pl-k">=</span> r.所属影院编号;
+
+<span class="pl-c"><span class="pl-c">--</span> 创建用户订单详情视图</span>
+CREATE VIEW 用户订单详情视图 <span class="pl-k">AS</span>
+<span class="pl-k">SELECT</span> o.编号 <span class="pl-k">AS</span> 订单编号, u.用户名, 
+      m.影片名称, d.电影放映时间,
+      o.电影票座位信息, o.订单状态
+<span class="pl-k">FROM</span> 订单表 o
+<span class="pl-k">JOIN</span> 用户表 u <span class="pl-k">ON</span> o.所属用户编号 <span class="pl-k">=</span> u.编号
+<span class="pl-k">JOIN</span> 订单详情表 d <span class="pl-k">ON</span> o.所属场次编号 <span class="pl-k">=</span> d.编号
+<span class="pl-k">JOIN</span> 影片表 m <span class="pl-k">ON</span> d.放映的电影编号 <span class="pl-k">=</span> m.编号;
+
+<span class="pl-c"><span class="pl-c">--</span> 创建用户电影评论视图</span>
+CREATE VIEW 用户电影评论视图 <span class="pl-k">AS</span>
+<span class="pl-k">SELECT</span> c.编号 <span class="pl-k">AS</span> 评论编号, u.用户名, 
+      m.影片名称, c.评论内容, c.评分, c.评论时间
+<span class="pl-k">FROM</span> 评论表 c
+<span class="pl-k">JOIN</span> 用户表 u <span class="pl-k">ON</span> c.所属用户编号 <span class="pl-k">=</span> u.编号
+<span class="pl-k">JOIN</span> 影片表 m <span class="pl-k">ON</span> c.所属电影编号 <span class="pl-k">=</span> m.编号;</pre></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 创建用户注册存储过程</span>
+CREATE <span class="pl-k">OR</span> REPLACE PROCEDURE 用户注册 (
+    p_username <span class="pl-k">IN</span> <span class="pl-k">VARCHAR2</span>,
+    p_password <span class="pl-k">IN</span> <span class="pl-k">VARCHAR2</span>,
+    p_email <span class="pl-k">IN</span> <span class="pl-k">VARCHAR2</span>,
+    p_role <span class="pl-k">IN</span> <span class="pl-k">VARCHAR2</span>
+) <span class="pl-k">AS</span>
+<span class="pl-k">BEGIN</span>
+    <span class="pl-k">INSERT INTO</span> 用户表 (用户名, 密码, 邮箱, 角色)
+    <span class="pl-k">VALUES</span> (p_username, p_password, p_email, p_role);
+END 用户注册;
+<span class="pl-k">/</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 创建更新订单状态存储过程</span>
+CREATE <span class="pl-k">OR</span> REPLACE PROCEDURE 更新订单状态 (
+    p_order_id <span class="pl-k">IN</span> <span class="pl-k">NUMBER</span>,
+    p_new_status <span class="pl-k">IN</span> <span class="pl-k">VARCHAR2</span>
+) <span class="pl-k">AS</span>
+<span class="pl-k">BEGIN</span>
+    <span class="pl-k">UPDATE</span> 订单表
+    <span class="pl-k">SET</span> 订单状态 <span class="pl-k">=</span> p_new_status
+    <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> p_order_id;
+
+    <span class="pl-k">COMMIT</span>; <span class="pl-c"><span class="pl-c">--</span> 提交事务</span>
+END 更新订单状态;
+<span class="pl-k">/</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 创建计算电影平均评分函数</span>
+CREATE <span class="pl-k">OR</span> REPLACE FUNCTION 计算电影平均评分 (
+    p_movie_id <span class="pl-k">IN</span> <span class="pl-k">NUMBER</span>
+) RETURN <span class="pl-k">NUMBER</span> <span class="pl-k">AS</span>
+    v_average_rating <span class="pl-k">NUMBER</span>;
+<span class="pl-k">BEGIN</span>
+    <span class="pl-k">SELECT</span> <span class="pl-c1">AVG</span>(评分)
+    INTO v_average_rating
+    <span class="pl-k">FROM</span> 评论表
+    <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> p_movie_id;
+
+    RETURN NVL(v_average_rating, <span class="pl-c1">0</span>); <span class="pl-c"><span class="pl-c">--</span> 如果没有评分，则返回0</span>
+END 计算电影平均评分;
+<span class="pl-k">/</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 创建查询用户订单总数函数</span>
+CREATE <span class="pl-k">OR</span> REPLACE FUNCTION 查询用户订单总数 (
+    p_user_id <span class="pl-k">IN</span> <span class="pl-k">NUMBER</span>
+) RETURN <span class="pl-k">NUMBER</span> <span class="pl-k">AS</span>
+    v_order_count <span class="pl-k">NUMBER</span>;
+<span class="pl-k">BEGIN</span>
+    <span class="pl-k">SELECT</span> <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>)
+    INTO v_order_count
+    <span class="pl-k">FROM</span> 订单表
+    <span class="pl-k">WHERE</span> 所属用户编号 <span class="pl-k">=</span> p_user_id;
+
+    RETURN v_order_count;
+END 查询用户订单总数;
+<span class="pl-k">/</span></pre></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 自动更新影片评分和参评人数</span>
+CREATE <span class="pl-k">OR</span> REPLACE TRIGGER 更新影片评分
+AFTER INSERT <span class="pl-k">OR</span> <span class="pl-k">UPDATE</span> <span class="pl-k">OR</span> <span class="pl-k">DELETE</span> <span class="pl-k">ON</span> 评论表
+FOR EACH ROW
+DECLARE
+    v_电影编号 影片表.编号%TYPE;
+<span class="pl-k">BEGIN</span>
+    IF INSERTING THEN
+        v_电影编号 :<span class="pl-k">=</span> :NEW.所属电影编号;
+        <span class="pl-k">UPDATE</span> 影片表 <span class="pl-k">SET</span>
+            电影评分 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">AVG</span>(评分) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> v_电影编号),
+            电影参评人数 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> v_电影编号)
+        <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> v_电影编号;
+    ELSIF DELETING THEN
+        v_电影编号 :<span class="pl-k">=</span> :OLD.所属电影编号;
+        <span class="pl-k">UPDATE</span> 影片表 <span class="pl-k">SET</span>
+            电影评分 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">AVG</span>(评分) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> v_电影编号),
+            电影参评人数 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> v_电影编号)
+        <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> v_电影编号;
+    ELSE
+        <span class="pl-c"><span class="pl-c">--</span> 处理电影变更的情况</span>
+        IF :NEW.所属电影编号 <span class="pl-k">!=</span> :OLD.所属电影编号 THEN
+            <span class="pl-c"><span class="pl-c">--</span> 更新原电影</span>
+            <span class="pl-k">UPDATE</span> 影片表 <span class="pl-k">SET</span>
+                电影评分 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">AVG</span>(评分) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> :OLD.所属电影编号),
+                电影参评人数 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> :OLD.所属电影编号)
+            <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :OLD.所属电影编号;
+            
+            <span class="pl-c"><span class="pl-c">--</span> 更新新电影</span>
+            <span class="pl-k">UPDATE</span> 影片表 <span class="pl-k">SET</span>
+                电影评分 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">AVG</span>(评分) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> :NEW.所属电影编号),
+                电影参评人数 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> :NEW.所属电影编号)
+            <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :NEW.所属电影编号;
+        ELSE
+            <span class="pl-c"><span class="pl-c">--</span> 只更新当前电影</span>
+            <span class="pl-k">UPDATE</span> 影片表 <span class="pl-k">SET</span>
+                电影评分 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">AVG</span>(评分) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> :NEW.所属电影编号),
+                电影参评人数 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">FROM</span> 评论表 <span class="pl-k">WHERE</span> 所属电影编号 <span class="pl-k">=</span> :NEW.所属电影编号)
+            <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :NEW.所属电影编号;
+        END IF;
+    END IF;
+END;
+<span class="pl-k">/</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 订单支付后更新场次座位</span>
+CREATE <span class="pl-k">OR</span> REPLACE TRIGGER 更新场次座位
+AFTER <span class="pl-k">UPDATE</span> OF 订单状态 <span class="pl-k">ON</span> 订单表
+FOR EACH ROW
+WHEN (NEW.订单状态 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>已支付<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> OLD.订单状态 <span class="pl-k">!=</span> <span class="pl-s"><span class="pl-pds">'</span>已支付<span class="pl-pds">'</span></span>)
+DECLARE
+    v_座位数 <span class="pl-k">NUMBER</span>;
+<span class="pl-k">BEGIN</span>
+    <span class="pl-c"><span class="pl-c">--</span> 计算订单中的座位数量（以逗号分隔）</span>
+    v_座位数 :<span class="pl-k">=</span> REGEXP_COUNT(:NEW.电影票座位信息, <span class="pl-s"><span class="pl-pds">'</span>,<span class="pl-pds">'</span></span>) <span class="pl-k">+</span> <span class="pl-c1">1</span>;
+    
+    <span class="pl-k">UPDATE</span> 订单详情表
+    <span class="pl-k">SET</span> 剩余座位数 <span class="pl-k">=</span> 剩余座位数 <span class="pl-k">-</span> v_座位数
+    <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :NEW.所属场次编号;
+END;
+<span class="pl-k">/</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 自动更新场次状态</span>
+CREATE <span class="pl-k">OR</span> REPLACE TRIGGER 更新场次状态
+AFTER <span class="pl-k">UPDATE</span> OF 剩余座位数 <span class="pl-k">ON</span> 订单详情表
+FOR EACH ROW
+<span class="pl-k">BEGIN</span>
+    IF :NEW.剩余座位数 <span class="pl-k">&lt;=</span> <span class="pl-c1">0</span> THEN
+        <span class="pl-k">UPDATE</span> 订单详情表
+        <span class="pl-k">SET</span> 场次状态 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>已售罄<span class="pl-pds">'</span></span>
+        <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :NEW.编号;
+    ELSIF :NEW.剩余座位数 <span class="pl-k">&lt;</span> (:NEW.剩余座位数 <span class="pl-k">+</span> :NEW.剩余座位数 <span class="pl-k">*</span> <span class="pl-c1">0</span>.<span class="pl-c1">2</span>) THEN  <span class="pl-c"><span class="pl-c">--</span> 示例：少于20%座位时</span>
+        <span class="pl-k">UPDATE</span> 订单详情表
+        <span class="pl-k">SET</span> 场次状态 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>即将售罄<span class="pl-pds">'</span></span>
+        <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :NEW.编号;
+    ELSE
+        <span class="pl-k">UPDATE</span> 订单详情表
+        <span class="pl-k">SET</span> 场次状态 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>可预订<span class="pl-pds">'</span></span>
+        <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :NEW.编号;
+    END IF;
+END;
+<span class="pl-k">/</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 新评论自动关联用户名</span>
+CREATE <span class="pl-k">OR</span> REPLACE TRIGGER 填充评论用户名
+BEFORE INSERT <span class="pl-k">ON</span> 评论表
+FOR EACH ROW
+<span class="pl-k">BEGIN</span>
+    <span class="pl-k">SELECT</span> 用户名 INTO :NEW.所属用户
+    <span class="pl-k">FROM</span> 用户表
+    <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :NEW.所属用户编号;
+END;
+<span class="pl-k">/</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 票房自动累加</span>
+CREATE <span class="pl-k">OR</span> REPLACE TRIGGER 更新影片票房
+AFTER <span class="pl-k">UPDATE</span> OF 订单状态 <span class="pl-k">ON</span> 订单表
+FOR EACH ROW
+WHEN (NEW.订单状态 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>已支付<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> OLD.订单状态 <span class="pl-k">!=</span> <span class="pl-s"><span class="pl-pds">'</span>已支付<span class="pl-pds">'</span></span>)
+DECLARE
+    v_电影编号 影片表.编号%TYPE;
+<span class="pl-k">BEGIN</span>
+    <span class="pl-c"><span class="pl-c">--</span> 获取关联的电影编号</span>
+    <span class="pl-k">SELECT</span> 放映的电影编号 INTO v_电影编号
+    <span class="pl-k">FROM</span> 订单详情表
+    <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> :NEW.所属场次编号;
+    
+    <span class="pl-c"><span class="pl-c">--</span> 更新票房</span>
+    <span class="pl-k">UPDATE</span> 影片表
+    <span class="pl-k">SET</span> 票房 <span class="pl-k">=</span> 票房 <span class="pl-k">+</span> :NEW.订单价格
+    <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> v_电影编号;
+END;
+<span class="pl-k">/</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 场次时间冲突检查</span>
+CREATE <span class="pl-k">OR</span> REPLACE TRIGGER 检查场次冲突
+BEFORE INSERT <span class="pl-k">OR</span> <span class="pl-k">UPDATE</span> <span class="pl-k">ON</span> 订单详情表
+FOR EACH ROW
+DECLARE
+    v_conflict_count <span class="pl-k">NUMBER</span>;
+<span class="pl-k">BEGIN</span>
+    <span class="pl-k">SELECT</span> <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) INTO v_conflict_count
+    <span class="pl-k">FROM</span> 订单详情表
+    <span class="pl-k">WHERE</span> 所属放映厅 <span class="pl-k">=</span> :NEW.所属放映厅
+    <span class="pl-k">AND</span> 编号 <span class="pl-k">!=</span> :NEW.编号  <span class="pl-c"><span class="pl-c">--</span> 排除自身</span>
+    <span class="pl-k">AND</span> 电影放映时间 BETWEEN :NEW.电影放映时间 <span class="pl-k">-</span> INTERVAL <span class="pl-s"><span class="pl-pds">'</span>2<span class="pl-pds">'</span></span> HOUR
+                     <span class="pl-k">AND</span> :NEW.电影放映时间 <span class="pl-k">+</span> INTERVAL <span class="pl-s"><span class="pl-pds">'</span>2<span class="pl-pds">'</span></span> HOUR;
+    
+    IF v_conflict_count <span class="pl-k">&gt;</span> <span class="pl-c1">0</span> THEN
+        RAISE_APPLICATION_ERROR(<span class="pl-k">-</span><span class="pl-c1">20001</span>, <span class="pl-s"><span class="pl-pds">'</span>该放映厅在此时间段已有其他场次安排<span class="pl-pds">'</span></span>);
+    END IF;
+END;
+<span class="pl-k">/</span></pre></div>
+<h3>1. 用户管理操作</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 用户注册</span>
+<span class="pl-k">INSERT INTO</span> 用户表 (用户名, 密码, 邮箱, 角色) 
+<span class="pl-k">VALUES</span> (<span class="pl-s"><span class="pl-pds">'</span>张三<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>zhangsan123<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>zhangsan@example.com<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>普通用户<span class="pl-pds">'</span></span>);
+
+<span class="pl-c"><span class="pl-c">--</span> 用户信息更新</span>
+<span class="pl-k">UPDATE</span> 用户表 
+<span class="pl-k">SET</span> 用户头像 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>avatars/zhangsan.jpg<span class="pl-pds">'</span></span>, 密码 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>newpassword123<span class="pl-pds">'</span></span> 
+<span class="pl-k">WHERE</span> 用户名 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>张三<span class="pl-pds">'</span></span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 用户删除</span>
+<span class="pl-k">DELETE</span> <span class="pl-k">FROM</span> 用户表 <span class="pl-k">WHERE</span> 用户名 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>张三<span class="pl-pds">'</span></span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 用户登录验证</span>
+<span class="pl-k">SELECT</span> 编号, 用户名, 角色 <span class="pl-k">FROM</span> 用户表 
+<span class="pl-k">WHERE</span> 邮箱 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>zhangsan@example.com<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> 密码 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>zhangsan123<span class="pl-pds">'</span></span>;</pre></div>
+<h3>2. 影片管理操作</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 添加新影片</span>
+<span class="pl-k">INSERT INTO</span> 影片表 (
+    影片名称, 国外名称, 导演, 电影详情, 电影时长, 
+    电影类型, 上映时间, 制片地区, 电影海报地址, 电影状态
+) <span class="pl-k">VALUES</span> (
+    <span class="pl-s"><span class="pl-pds">'</span>流浪地球<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>The Wandering Earth<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>郭帆<span class="pl-pds">'</span></span>, 
+    <span class="pl-s"><span class="pl-pds">'</span>太阳即将毁灭，人类在地球表面建造巨大推进器...<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">125</span>, <span class="pl-s"><span class="pl-pds">'</span>科幻/灾难<span class="pl-pds">'</span></span>, <span class="pl-k">DATE</span> <span class="pl-s"><span class="pl-pds">'</span>2019-02-05<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>中国<span class="pl-pds">'</span></span>, 
+    <span class="pl-s"><span class="pl-pds">'</span>posters/wandering_earth.jpg<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>已下架<span class="pl-pds">'</span></span>
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 更新影片信息</span>
+<span class="pl-k">UPDATE</span> 影片表 
+<span class="pl-k">SET</span> 电影评分 <span class="pl-k">=</span> <span class="pl-c1">7</span>.<span class="pl-c1">9</span>, 电影参评人数 <span class="pl-k">=</span> <span class="pl-c1">1250000</span> 
+<span class="pl-k">WHERE</span> 影片名称 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>流浪地球<span class="pl-pds">'</span></span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 影片查询 (按类型和评分)</span>
+<span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> 影片表 
+<span class="pl-k">WHERE</span> 电影类型 <span class="pl-k">LIKE</span> <span class="pl-s"><span class="pl-pds">'</span>%科幻%<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> 电影评分 <span class="pl-k">&gt;</span> <span class="pl-c1">7</span>.<span class="pl-c1">0</span> 
+<span class="pl-k">ORDER BY</span> 上映时间 <span class="pl-k">DESC</span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 票房排行榜</span>
+<span class="pl-k">SELECT</span> 影片名称, 票房 <span class="pl-k">FROM</span> 影片表 
+<span class="pl-k">WHERE</span> 票房 <span class="pl-k">IS NOT NULL</span> 
+<span class="pl-k">ORDER BY</span> 票房 <span class="pl-k">DESC</span> 
+FETCH FIRST <span class="pl-c1">10</span> ROWS ONLY;</pre></div>
+<h3>3. 影院管理操作</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 新增影院</span>
+<span class="pl-k">INSERT INTO</span> 影院表 (影院名称, 影院地址) 
+<span class="pl-k">VALUES</span> (<span class="pl-s"><span class="pl-pds">'</span>万达影城(北京CBD店)<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>北京市朝阳区建国路93号万达广场<span class="pl-pds">'</span></span>);
+
+<span class="pl-c"><span class="pl-c">--</span> 新增放映厅</span>
+<span class="pl-k">INSERT INTO</span> 放映厅表 (放映厅名称, 放映厅容量, 所属影院编号) 
+<span class="pl-k">VALUES</span> (<span class="pl-s"><span class="pl-pds">'</span>IMAX厅<span class="pl-pds">'</span></span>, <span class="pl-c1">250</span>, (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 影院表 <span class="pl-k">WHERE</span> 影院名称 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>万达影城(北京CBD店)<span class="pl-pds">'</span></span>));</pre></div>
+<h3>4. 场次管理操作</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 创建新场次</span>
+<span class="pl-k">INSERT INTO</span> 订单详情表 (
+    所属放映厅, 放映的电影编号, 电影放映时间, 售价, 剩余座位数, 场次状态
+) <span class="pl-k">VALUES</span> (
+    (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 放映厅表 <span class="pl-k">WHERE</span> 放映厅名称 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>IMAX厅<span class="pl-pds">'</span></span>),
+    (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 影片表 <span class="pl-k">WHERE</span> 影片名称 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>流浪地球<span class="pl-pds">'</span></span>),
+    <span class="pl-k">TIMESTAMP</span> <span class="pl-s"><span class="pl-pds">'</span>2023-05-20 19:30:00<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">65</span>.<span class="pl-c1">00</span>,
+    (<span class="pl-k">SELECT</span> 放映厅容量 <span class="pl-k">FROM</span> 放映厅表 <span class="pl-k">WHERE</span> 放映厅名称 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>IMAX厅<span class="pl-pds">'</span></span>),
+    <span class="pl-s"><span class="pl-pds">'</span>可预订<span class="pl-pds">'</span></span>
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 查询可用场次</span>
+<span class="pl-k">SELECT</span> 
+    m.影片名称, 
+    c.影院名称, 
+    h.放映厅名称, 
+    s.电影放映时间, 
+    s.售价, 
+    s.剩余座位数
+<span class="pl-k">FROM</span> 订单详情表 s
+<span class="pl-k">JOIN</span> 影片表 m <span class="pl-k">ON</span> s.放映的电影编号 <span class="pl-k">=</span> m.编号
+<span class="pl-k">JOIN</span> 放映厅表 h <span class="pl-k">ON</span> s.所属放映厅 <span class="pl-k">=</span> h.编号
+<span class="pl-k">JOIN</span> 影院表 c <span class="pl-k">ON</span> h.所属影院编号 <span class="pl-k">=</span> c.编号
+<span class="pl-k">WHERE</span> m.影片名称 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>流浪地球<span class="pl-pds">'</span></span>
+<span class="pl-k">AND</span> s.电影放映时间 <span class="pl-k">&gt;</span> <span class="pl-k">SYSDATE</span>
+<span class="pl-k">AND</span> s.剩余座位数 <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>;</pre></div>
+<h3>5. 订单管理操作</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 创建新订单</span>
+<span class="pl-k">INSERT INTO</span> 订单表 (
+    所属用户编号, 所属场次编号, 电影票座位信息, 订单状态, 订单价格
+) <span class="pl-k">VALUES</span> (
+    (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 用户表 <span class="pl-k">WHERE</span> 邮箱 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>zhangsan@example.com<span class="pl-pds">'</span></span>),
+    (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 订单详情表 <span class="pl-k">WHERE</span> 电影放映时间 <span class="pl-k">=</span> <span class="pl-k">TIMESTAMP</span> <span class="pl-s"><span class="pl-pds">'</span>2023-05-20 19:30:00<span class="pl-pds">'</span></span>),
+    <span class="pl-s"><span class="pl-pds">'</span>A5,A6,A7<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span>待支付<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">195</span>.<span class="pl-c1">00</span>
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 支付订单</span>
+<span class="pl-k">UPDATE</span> 订单表 
+<span class="pl-k">SET</span> 订单状态 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>已支付<span class="pl-pds">'</span></span>, 订单支付时间 <span class="pl-k">=</span> <span class="pl-k">SYSDATE</span> 
+<span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> <span class="pl-c1">MAX</span>(编号) <span class="pl-k">FROM</span> 订单表);
+
+<span class="pl-c"><span class="pl-c">--</span> 查询用户历史订单</span>
+<span class="pl-k">SELECT</span> 
+    o.订单支付时间,
+    m.影片名称,
+    c.影院名称,
+    h.放映厅名称,
+    s.电影放映时间,
+    o.电影票座位信息,
+    o.订单价格
+<span class="pl-k">FROM</span> 订单表 o
+<span class="pl-k">JOIN</span> 订单详情表 s <span class="pl-k">ON</span> o.所属场次编号 <span class="pl-k">=</span> s.编号
+<span class="pl-k">JOIN</span> 影片表 m <span class="pl-k">ON</span> s.放映的电影编号 <span class="pl-k">=</span> m.编号
+<span class="pl-k">JOIN</span> 放映厅表 h <span class="pl-k">ON</span> s.所属放映厅 <span class="pl-k">=</span> h.编号
+<span class="pl-k">JOIN</span> 影院表 c <span class="pl-k">ON</span> h.所属影院编号 <span class="pl-k">=</span> c.编号
+<span class="pl-k">WHERE</span> o.所属用户编号 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 用户表 <span class="pl-k">WHERE</span> 邮箱 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>zhangsan@example.com<span class="pl-pds">'</span></span>);</pre></div>
+<h3>6. 评论管理操作</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 添加评论</span>
+<span class="pl-k">INSERT INTO</span> 评论表 (所属用户编号, 评论内容, 所属电影编号, 评分)
+<span class="pl-k">VALUES</span> (
+    (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 用户表 <span class="pl-k">WHERE</span> 邮箱 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>zhangsan@example.com<span class="pl-pds">'</span></span>),
+    <span class="pl-s"><span class="pl-pds">'</span>特效震撼，中国科幻的里程碑作品<span class="pl-pds">'</span></span>,
+    (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 影片表 <span class="pl-k">WHERE</span> 影片名称 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>流浪地球<span class="pl-pds">'</span></span>),
+    <span class="pl-c1">9</span>.<span class="pl-c1">0</span>
+);
+
+<span class="pl-c"><span class="pl-c">--</span> 查询影片评论</span>
+<span class="pl-k">SELECT</span> 
+    u.用户名,
+    c.评论内容,
+    c.评分,
+    c.评论时间
+<span class="pl-k">FROM</span> 评论表 c
+<span class="pl-k">JOIN</span> 用户表 u <span class="pl-k">ON</span> c.所属用户编号 <span class="pl-k">=</span> u.编号
+<span class="pl-k">WHERE</span> c.所属电影编号 <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> 编号 <span class="pl-k">FROM</span> 影片表 <span class="pl-k">WHERE</span> 影片名称 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>流浪地球<span class="pl-pds">'</span></span>)
+<span class="pl-k">ORDER BY</span> c.评论时间 <span class="pl-k">DESC</span>;</pre></div>
+<h3>7. 事务处理示例 (购票全流程)</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate">DECLARE
+    v_user_id 用户表.编号%TYPE;
+    v_session_id 订单详情表.编号%TYPE;
+    v_seats <span class="pl-k">VARCHAR2</span>(<span class="pl-c1">100</span>) :<span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>B10,B11<span class="pl-pds">'</span></span>;
+    v_seat_count <span class="pl-k">NUMBER</span> :<span class="pl-k">=</span> <span class="pl-c1">2</span>;
+    v_price <span class="pl-k">NUMBER</span>;
+<span class="pl-k">BEGIN</span>
+    <span class="pl-c"><span class="pl-c">--</span> 获取用户ID</span>
+    <span class="pl-k">SELECT</span> 编号 INTO v_user_id 
+    <span class="pl-k">FROM</span> 用户表 <span class="pl-k">WHERE</span> 邮箱 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>zhangsan@example.com<span class="pl-pds">'</span></span>;
+    
+    <span class="pl-c"><span class="pl-c">--</span> 获取场次信息和价格</span>
+    <span class="pl-k">SELECT</span> 编号, 售价 INTO v_session_id, v_price 
+    <span class="pl-k">FROM</span> 订单详情表 
+    <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> <span class="pl-c1">101</span>; <span class="pl-c"><span class="pl-c">--</span> 假设场次ID为101</span>
+    
+    <span class="pl-c"><span class="pl-c">--</span> 验证座位可用性</span>
+    IF (<span class="pl-k">SELECT</span> 剩余座位数 <span class="pl-k">FROM</span> 订单详情表 <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> v_session_id) <span class="pl-k">&lt;</span> v_seat_count THEN
+        RAISE_APPLICATION_ERROR(<span class="pl-k">-</span><span class="pl-c1">20001</span>, <span class="pl-s"><span class="pl-pds">'</span>座位不足<span class="pl-pds">'</span></span>);
+    END IF;
+    
+    <span class="pl-c"><span class="pl-c">--</span> 开始事务</span>
+    SAVEPOINT start_transaction;
+    
+    <span class="pl-c"><span class="pl-c">--</span> 创建订单</span>
+    <span class="pl-k">INSERT INTO</span> 订单表 (所属用户编号, 所属场次编号, 电影票座位信息, 订单状态, 订单价格)
+    <span class="pl-k">VALUES</span> (v_user_id, v_session_id, v_seats, <span class="pl-s"><span class="pl-pds">'</span>待支付<span class="pl-pds">'</span></span>, v_price <span class="pl-k">*</span> v_seat_count);
+    
+    <span class="pl-c"><span class="pl-c">--</span> 锁定座位 (通过更新场次)</span>
+    <span class="pl-k">UPDATE</span> 订单详情表 
+    <span class="pl-k">SET</span> 剩余座位数 <span class="pl-k">=</span> 剩余座位数 <span class="pl-k">-</span> v_seat_count 
+    <span class="pl-k">WHERE</span> 编号 <span class="pl-k">=</span> v_session_id;
+    
+    <span class="pl-c"><span class="pl-c">--</span> 模拟支付成功</span>
+    <span class="pl-k">UPDATE</span> 订单表 
+    <span class="pl-k">SET</span> 订单状态 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>已支付<span class="pl-pds">'</span></span>, 订单支付时间 <span class="pl-k">=</span> <span class="pl-k">SYSDATE</span> 
+    <span class="pl-k">WHERE</span> 所属用户编号 <span class="pl-k">=</span> v_user_id 
+    <span class="pl-k">AND</span> 所属场次编号 <span class="pl-k">=</span> v_session_id;
+    
+    <span class="pl-k">COMMIT</span>;
+EXCEPTION
+    WHEN OTHERS THEN
+        <span class="pl-k">ROLLBACK</span> TO start_transaction;
+        RAISE;
+END;
+<span class="pl-k">/</span></pre></div>
+<h3>8. 复杂查询示例</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 查询各类型影片平均评分</span>
+<span class="pl-k">SELECT</span> 
+    电影类型,
+    ROUND(<span class="pl-c1">AVG</span>(电影评分), <span class="pl-c1">2</span>) <span class="pl-k">AS</span> 平均评分,
+    <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">AS</span> 影片数量
+<span class="pl-k">FROM</span> 影片表
+<span class="pl-k">GROUP BY</span> 电影类型
+<span class="pl-k">HAVING</span> <span class="pl-c1">AVG</span>(电影评分) <span class="pl-k">&gt;</span> <span class="pl-c1">6</span>.<span class="pl-c1">0</span>
+<span class="pl-k">ORDER BY</span> 平均评分 <span class="pl-k">DESC</span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 查询热门影片(评分高且评论多)</span>
+<span class="pl-k">SELECT</span> 
+    m.影片名称,
+    m.电影评分,
+    <span class="pl-c1">COUNT</span>(c.编号) <span class="pl-k">AS</span> 评论数量,
+    <span class="pl-c1">SUM</span>(o.订单价格) <span class="pl-k">AS</span> 总票房
+<span class="pl-k">FROM</span> 影片表 m
+<span class="pl-k">LEFT JOIN</span> 评论表 c <span class="pl-k">ON</span> m.编号 <span class="pl-k">=</span> c.所属电影编号
+<span class="pl-k">LEFT JOIN</span> 订单详情表 s <span class="pl-k">ON</span> m.编号 <span class="pl-k">=</span> s.放映的电影编号
+<span class="pl-k">LEFT JOIN</span> 订单表 o <span class="pl-k">ON</span> s.编号 <span class="pl-k">=</span> o.所属场次编号
+<span class="pl-k">GROUP BY</span> m.影片名称, m.电影评分
+<span class="pl-k">HAVING</span> <span class="pl-c1">COUNT</span>(c.编号) <span class="pl-k">&gt;</span> <span class="pl-c1">1000</span>
+<span class="pl-k">ORDER BY</span> m.电影评分 <span class="pl-k">DESC</span>, 评论数量 <span class="pl-k">DESC</span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 查询用户观影偏好</span>
+<span class="pl-k">SELECT</span> 
+    u.用户名,
+    m.电影类型,
+    <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">AS</span> 观影次数,
+    <span class="pl-c1">SUM</span>(o.订单价格) <span class="pl-k">AS</span> 总消费
+<span class="pl-k">FROM</span> 订单表 o
+<span class="pl-k">JOIN</span> 用户表 u <span class="pl-k">ON</span> o.所属用户编号 <span class="pl-k">=</span> u.编号
+<span class="pl-k">JOIN</span> 订单详情表 s <span class="pl-k">ON</span> o.所属场次编号 <span class="pl-k">=</span> s.编号
+<span class="pl-k">JOIN</span> 影片表 m <span class="pl-k">ON</span> s.放映的电影编号 <span class="pl-k">=</span> m.编号
+<span class="pl-k">GROUP BY</span> u.用户名, m.电影类型
+<span class="pl-k">ORDER BY</span> 观影次数 <span class="pl-k">DESC</span>;</pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://tanyunhao.github.io">谭云浩</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>

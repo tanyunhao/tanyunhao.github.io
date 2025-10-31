@@ -20,6 +20,8 @@
 【闲鱼】https://m.tb.cn/h.SPgnB87?tk=wAgFfWzwQuK MF278 「我在闲鱼发布了【Calendar（用Python开发的带有备忘录、天气信息的】」
 点击链接直接打开
 
+[123云盘下载](https://www.123865.com/ps/WlFzVv-mOrph)
+
 ---
 ## 四、程序运行
 

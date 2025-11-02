@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://raw.githubusercontent.com/tanyunhao/picture/master/简约小人开心大笑_爱给网_aigei_com.gif"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="
+<div style='text-align: center;'>
+    <span style='font-size: 32px;'>实验二 因果推理算法及工具应用</span>
+</div>
+
+
+## 1、实验目的
+
+（1）  学习“NOTEARS/ PC/GraN-DAG”等因果发现算法在python中的使用与实现；
+
+（2）  学习AMOS软件，计算因果效应
+
+（3）  学会用Grid Search/BOHB等方法或工具进行超参数调优
+
+（4）  通过多项指标比较比较算法效果
+
+（5）  结果可视化与展示。">
+<meta property="og:title" content="因果推理算法及工具应用">
+<meta property="og:description" content="
+<div style='text-align: center;'>
+    <span style='font-size: 32px;'>实验二 因果推理算法及工具应用</span>
+</div>
+
+
+## 1、实验目的
+
+（1）  学习“NOTEARS/ PC/GraN-DAG”等因果发现算法在python中的使用与实现；
+
+（2）  学习AMOS软件，计算因果效应
+
+（3）  学会用Grid Search/BOHB等方法或工具进行超参数调优
+
+（4）  通过多项指标比较比较算法效果
+
+（5）  结果可视化与展示。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tanyunhao.github.io/post/yin-guo-tui-li-suan-fa-ji-gong-ju-ying-yong.html">
+<meta property="og:image" content="https://raw.githubusercontent.com/tanyunhao/picture/master/简约小人开心大笑_爱给网_aigei_com.gif">
+<title>因果推理算法及工具应用</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">因果推理算法及工具应用</h1>
+<div class="title-right">
+    <a href="https://tanyunhao.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/tanyunhao/tanyunhao.github.io/issues/6" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><div>
+    <span>实验二 因果推理算法及工具应用</span>
+</div>
+<h2>1、实验目的</h2>
+<p>（1）  学习“NOTEARS/ PC/GraN-DAG”等因果发现算法在python中的使用与实现；</p>
+<p>（2）  学习AMOS软件，计算因果效应</p>
+<p>（3）  学会用Grid Search/BOHB等方法或工具进行超参数调优</p>
+<p>（4）  通过多项指标比较比较算法效果</p>
+<p>（5）  结果可视化与展示。</p>
+<h2>2、实验准备</h2>
+<p>1、准备好python环境和编译器软件（PyCharm或Visual Studio Code）；</p>
+<p>2、自行在网络资源中找到“NOTEARS/ PC/GraN-DAG”对应的python代码（推荐渠道：</p>
+<p>1.NOTEARS官方项目<a href="https://github.com/xunzheng/notears%EF%BC%9B">https://github.com/xunzheng/notears；</a></p>
+<p>2.GraN-DAG官方项目<a href="https://github.com/lihebi/GraN-DAG-nodata%EF%BC%9B">https://github.com/lihebi/GraN-DAG-nodata；</a></p>
+<p>3.华为诺亚实验室集成工具库</p>
+<p><a href="https://github.com/huawei-noah/trustworthyAI/tree/master/gcastle%EF%BC%89%EF%BC%8C%E5%B9%B6%E5%AE%8C%E6%88%90%E7%AE%97%E6%B3%95%E6%89%80%E9%9C%80%E8%A6%81python%E5%BA%93%E7%9A%84%E5%AE%89%E8%A3%85%EF%BC%9B">https://github.com/huawei-noah/trustworthyAI/tree/master/gcastle），并完成算法所需要python库的安装；</a></p>
+<p>注：上课演示以NOTEARS为例，先保证该算法配置完成</p>
+<p>3、根据教程安装好AMOS软件<a href="https://blog.csdn.net/2303_81888702/article/details/135410867%EF%BC%9B" rel="nofollow">https://blog.csdn.net/2303_81888702/article/details/135410867；</a></p>
+<p>4、提前熟悉实验材料（及其中涉及的概念）和所对应的算法代码，可借助大模型平台（如：ChatGPT/通义千问等）。</p>
+<p>NOTEARS的官方资源和AMOS安装文件已分别打包为“notears-master.zip”、“Amos28.zip”。</p>
+<h2>3、实验原理</h2>
+<p><strong>一、因果发现：</strong></p>
+<p>因果发现，即<strong>从纯观测数据中发现并获取因果关系</strong>。</p>
+<p>因果模型本质是反应变量之间的因果关系，比如我们有两个变量“吃饭”与“饱足”，我们知道二者是相关的，那么我们如何描述两个变量间的因果关系呢？其实通过一种有向的描述即可，我们会发现：吃饭会导致饱足，但是饱足不会导致吃饭。因此吃饭是饱足的因。我们可以表述为“吃饭--&gt;饱足”，所以我们可以发现，这本质上是一个有向无环的图模型（DAG）。所以如果我们可以通过一组变量写出其对应的DAG（专业术语是马尔可夫相容），那么我们就可以表达变量间的因果关系。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143229535.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143229535.png" alt="image-20240526143229535" style="max-width: 100%;"></a></th>
+</tr>
+</thead>
+</table></markdown-accessiblity-table>
+<p>​</p>
+<p>因果发现是一种统计学和机器学习的分支，旨在识别哪些变量是其他变量的原因，哪些是结果。由于直接观察因果关系通常是困难的，尤其是在自然和社会科学中，因果发现方法利用统计依赖性、干预数据（如果有的话）、背景知识以及特定的算法和技术来估计这些关系。</p>
+<p>当前主要有四种因果结构发现的方法：基于约束的方法、基于分数的方法、利用结构不对称性的方法和利用各种形式的干预的方法。每种方法可进一步被分为通过基于组合/搜索的算法和通过基于连续优化的算法。这些方法也可以被分为局部（local）即每次测试一条边，和全局（global）即测试整张图。</p>
+<p>**二、**<strong>PC</strong></p>
+<p>PC (Hoyer等人(2008))使用加性噪声模型进行因果发现，并提供了线性非高斯因果发现框架的推广，以处理变量具有加性噪声的非线性函数依赖。它提到非线性因果关系通常有助于打破观察变量之间的对称性，并有助于确定因果方向。PC假设观测变量的数据生成过程如下面的公式所示，其中变量xi是其父变量的函数，而噪声项ei是独立的加性噪声。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143303372.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143303372.png" alt="image-20240526143303372" style="max-width: 100%;"></a></p>
+<p>**三、**<strong>NOTEARS</strong></p>
+<p>NOTEARS (Zheng et al .(2018))是第一个将组合图搜索问题重建为连续优化问题的，并且许多方法改造了该方法的主要贡献即无环性惩罚。强制无环性的函数/惩罚 h 为：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143322203.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143322203.png" alt="image-20240526143322203" style="max-width: 100%;"></a></p>
+<p>将传统的组合优化问题（左）转化为连续程序（右）</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143336620.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143336620.png" alt="image-20240526143336620" style="max-width: 100%;"></a></p>
+<p>使用增广拉格朗日的标准机制，转换为无约束问题</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143350425.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143350425.png" alt="image-20240526143350425" style="max-width: 100%;"></a></p>
+<p>**四、**<strong>GraN-DAG</strong></p>
+<p>基于梯度的神经DAG学习(GraN-DAG)是一种基于分数的结构学习方法，它使用神经网络(nn)来处理非线性因果关系(Lachapelle et al .(2019))。它使用随机梯度方法来训练神经网络，以提高可扩展性并允许隐式正则化。它基于NOTEARS为神经网络制定了一种新的非周期性表征(Zheng et al .(2018))。为了确保非线性模型中的非周期性，它使用了一个类似于NOTEARS的参数，并首先在神经网络路径级别应用它，然后在图路径级别应用它。对于正则化，GraN-DAG使用一个称为初步邻居选择(PNS)的过程来为每个变量选择一组潜在的父变量。它使用最后的修剪步骤来去除假边。该算法主要适用于非线性高斯加性噪声模型。</p>
+<p><strong>五、结构因果模型：</strong></p>
+<p>结构因果模型由 Pearl 提出，其将所有考虑的变量组织成一个有向无环图，也称作因果图 (causal graph)，记作 G = (V,E) ，每个节点代表一个变量，一条由X 指向Y 的边代表X对Y有直接的因果作用。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143404196.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143404196.png" alt="image-20240526143404196" style="max-width: 100%;"></a></p>
+<p>节点的值由外生变量 (exogenous variable) 和所有直接父节点变量通过结构方程 (structural equations) 唯一确定。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143419218.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240526143419218.png" alt="image-20240526143419218" style="max-width: 100%;"></a></p>
+<p><strong>六、超参数调优</strong></p>
+<p><strong><a href="https://zhuanlan.zhihu.com/p/590823641" rel="nofollow">https://zhuanlan.zhihu.com/p/590823641</a></strong></p>
+<p><strong>模型参数</strong>：这些是由模型从给定的数据中估计出来的参数。例如，一个深度神经网络的权重。</p>
+<p><strong>模型超参数</strong>：这些是不能由模型从给定数据中估计的参数，超参数被用来估计模型的参数，例如，深度神经网络的学习率。</p>
+<p>超参数调优的主要方法：</p>
+<p><strong>手动超参数调优</strong>：包括通过手动方式来实验不同的超参数集。</p>
+<p><strong>随机搜索（Random Search）</strong>：在随机搜索方法中，我们为超参数创建了拥有很多可能值的网格。每次迭代都从这个网格中尝试随机的超参数组合，记录性能，最后得到最佳性能的超参数组合。</p>
+<p>**网格搜索（<strong>Grid Search</strong>）：**在网格搜索法中，我们为超参数创建了一个可能值的网格。每次迭代都以特定的顺序尝试超参数的组合。它在每一个可能的超参数组合上拟合模型并记录模型的性能。最后，它返回具有最佳超参数的最佳模型。</p>
+<p><strong>贝叶斯优化</strong>：为模型调整和寻找合适的超参数是一种优化问题。我们希望通过改变模型参数来最小化我们模型的损失函数。贝叶斯优化帮助我们通过最少的步骤中找到最小的点。贝叶斯优化还使用了采集函数（Acquisition Funtion），将采样引向有可能比当前最佳观察结果更好的区域。</p>
+<h2>4、实验内容</h2>
+<p>1、在python上实现NOTEARS，并通过生成数据对算法进行调参，之后将调优后的算法应用到给定数据，最后得到学习到的DAG。</p>
+<p>exp_linear/graph00000_data00000_X _.csv</p>
+<p>其中给定数据的已知信息如下：</p>
+<p>真实DAG的边缘数量为14-18</p>
+<p>graph_type = 'ER'；sem_type = 'gauss'；w_ranges = ((-2.0, -0.5), (0.5, 2.0))；  noise_scale = np.ones(d)</p>
+<p>2、将学习到的DAG应用到AMOS中进行计算因果效应，观察拟合指标是否达标，若不达标说明算法从数据中学习到的DAG与实际不符，需要重新进行步骤1。要求最终的AMOS指标处于合理范围。</p>
+<p>3、基于分组给定三组不同分布的数据（包含三个文件），此时已知真实DAG。要求分别在三组数据上应用三个算法，并通过评价指标比较算法性能。</p>
+<p>数据文件的具体分配参照“数据集分配.xlsx”</p>
+<p>要用的数据文件格式如下：</p>
+<p>exp_nonlinear1/ graph0000x_W_true .csv</p>
+<p>exp_nonlinear1/graph0000x_data0000y_X .csv</p>
+<p>exp_nonlinear2/ graph0000x_W_true .csv</p>
+<p>exp_nonlinear2/graph0000x_data0000y_X .csv</p>
+<p>exp_nonlinear3/ graph0000x_W_true .csv</p>
+<p>exp_nonlinear3/graph0000x_data0000y_X .csv</p>
+<p>其中x,y的值为0或1</p>
+<h2>5、实验要求</h2>
+<p>1.通过python实现PC/NOTEARS/GraN-DAG算法的运行。</p>
+<p>2.通过使用超参数调优策略（网格搜索或贝叶斯策略或其它工具，如BOHB）参数调整理解优化算法中各个参数的意义。</p>
+<p>3.通过NOTEARS学习未知真实DAG数据集中的DAG，并应用AMOS软件计算因果效应.</p>
+<p>4.提交NOTEARS最后的超参数、因果图以及各路径的因果效应。</p>
+<h2>6、实验过程</h2>
+<p>展示主要的实验过程（整体流程+具体进行设计的地方+实验测试过程）</p>
+<p>文字+图片（如：代码截图）</p>
+<h3>A 未知真实DAG数据集：</h3>
+<p>主要体现两部分内容：</p>
+<h4>（1）超参数调优代码设计</h4>
+<p>数据生成：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">notears</span> <span class="pl-k">import</span> <span class="pl-s1">linear</span>, <span class="pl-s1">utils</span>
+<span class="pl-k">import</span> <span class="pl-s1">numpy</span> <span class="pl-k">as</span> <span class="pl-s1">np</span>
+<span class="pl-k">from</span> <span class="pl-s1">tqdm</span> <span class="pl-k">import</span> <span class="pl-s1">tqdm</span>
+<span class="pl-k">from</span> <span class="pl-s1">collections</span> <span class="pl-k">import</span> <span class="pl-s1">defaultdict</span>
+<span class="pl-k">import</span> <span class="pl-s1">os</span>
+
+
+<span class="pl-k">def</span> <span class="pl-en">main</span>():
+    <span class="pl-s1">utils</span>.<span class="pl-c1">set_random_seed</span>(<span class="pl-c1">123</span>)
+    <span class="pl-c"># 生成图的数量</span>
+    <span class="pl-s1">num_graph</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span>
+    <span class="pl-c"># 每个图对应生成数据集的份数</span>
+    <span class="pl-s1">num_data_per_graph</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span>
+    <span class="pl-c"># 生成数据的保存地址</span>
+    <span class="pl-s1">save_data_path</span> <span class="pl-c1">=</span> <span class="pl-s">r"data"</span>
+    <span class="pl-c"># n-生成的数据量，多少条数据；d-生成图/生成数据的维度，几个变量；s0-生成图的边数；</span>
+    <span class="pl-c"># graph_type-生成图的类型（ER, SF, BP）；sem_type-生成数据的分布类型（线性：gauss, exp, gumbel, uniform, logistic, poisson/非线性：mlp, mim, gp, gp-add）</span>
+    <span class="pl-s1">n</span>, <span class="pl-s1">d</span>, <span class="pl-s1">s0</span>, <span class="pl-s1">graph_type</span>, <span class="pl-s1">sem_type</span> <span class="pl-c1">=</span> <span class="pl-c1">200</span>, <span class="pl-c1">7</span>, <span class="pl-c1">14</span>, <span class="pl-s">'ER'</span>, <span class="pl-s">'gauss'</span>
+    <span class="pl-s1">n1</span>, <span class="pl-s1">d1</span>, <span class="pl-s1">s1</span>, <span class="pl-s1">graph_type1</span>, <span class="pl-s1">sem_type1</span> <span class="pl-c1">=</span> <span class="pl-c1">30</span>, <span class="pl-c1">3</span>, <span class="pl-c1">2</span>, <span class="pl-s">'SF'</span>, <span class="pl-s">'mlp'</span>
+
+    <span class="pl-c"># 线性数据例子</span>
+    <span class="pl-c"># w_ranges-参数的数据范围</span>
+    <span class="pl-s1">w_ranges</span> <span class="pl-c1">=</span> ((<span class="pl-c1">-</span><span class="pl-c1">2.0</span>, <span class="pl-c1">-</span><span class="pl-c1">0.5</span>), (<span class="pl-c1">0.5</span>, <span class="pl-c1">2.0</span>))
+    <span class="pl-c"># noise_scale-加性噪声的范围</span>
+    <span class="pl-s1">noise_scale</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">ones</span>(<span class="pl-s1">d</span>)
+    <span class="pl-c"># 生成数据存放文件夹的名称</span>
+    <span class="pl-s1">expt_name</span> <span class="pl-c1">=</span> <span class="pl-s">'equal_var'</span>
+    <span class="pl-en">run_expt</span>(<span class="pl-s1">save_data_path</span>, <span class="pl-s1">num_graph</span>, <span class="pl-s1">num_data_per_graph</span>, <span class="pl-s1">n</span>, <span class="pl-s1">d</span>, <span class="pl-s1">s0</span>, <span class="pl-s1">graph_type</span>, <span class="pl-s1">sem_type</span>, <span class="pl-s1">w_ranges</span>, <span class="pl-s1">noise_scale</span>, <span class="pl-s1">expt_name</span>)
+
+    <span class="pl-c"># 非线性数据例子</span>
+    <span class="pl-s1">w_ranges</span> <span class="pl-c1">=</span> ((<span class="pl-c1">-</span><span class="pl-c1">2.0</span>, <span class="pl-c1">-</span><span class="pl-c1">1.1</span>), (<span class="pl-c1">1.1</span>, <span class="pl-c1">2.0</span>))
+    <span class="pl-s1">noise_scale1</span> <span class="pl-c1">=</span> [<span class="pl-c1">1.</span>, <span class="pl-c1">0.15</span>, <span class="pl-c1">0.2</span>]
+    <span class="pl-s1">expt_name</span> <span class="pl-c1">=</span> <span class="pl-s">'large_a'</span>
+    <span class="pl-c">#run_expt_(save_data_path, num_graph, num_data_per_graph, n1, d1, s1, graph_type1, sem_type1, w_ranges, noise_scale1, expt_name)</span>
+
+<span class="pl-c"># 线性</span>
+<span class="pl-k">def</span> <span class="pl-en">run_expt</span>(<span class="pl-s1">save_data_path</span>, <span class="pl-s1">num_graph</span>, <span class="pl-s1">num_data_per_graph</span>, <span class="pl-s1">n</span>, <span class="pl-s1">d</span>, <span class="pl-s1">s0</span>, <span class="pl-s1">graph_type</span>, <span class="pl-s1">sem_type</span>, <span class="pl-s1">w_ranges</span>, <span class="pl-s1">noise_scale</span>, <span class="pl-s1">expt_name</span>):
+    <span class="pl-c"># os.mkdir(expt_name)</span>
+    <span class="pl-c"># os.chmod(expt_name, 0o777)</span>
+    <span class="pl-c"># perf = defaultdict(list)</span>
+    <span class="pl-s1">noise_scale</span>  <span class="pl-c1">=</span><span class="pl-s1">np</span>.<span class="pl-c1">array</span>(<span class="pl-s1">noise_scale</span>)
+    <span class="pl-k">for</span> <span class="pl-s1">ii</span> <span class="pl-c1">in</span> <span class="pl-en">tqdm</span>(<span class="pl-en">range</span>(<span class="pl-s1">num_graph</span>)):
+        <span class="pl-c"># B_true-生成因果图的0-1邻接矩阵</span>
+        <span class="pl-v">B_true</span> <span class="pl-c1">=</span> <span class="pl-s1">utils</span>.<span class="pl-c1">simulate_dag</span>(<span class="pl-s1">d</span>, <span class="pl-s1">s0</span>, <span class="pl-s1">graph_type</span>)
+        <span class="pl-v">W_true</span> <span class="pl-c1">=</span> <span class="pl-s1">utils</span>.<span class="pl-c1">simulate_parameter</span>(<span class="pl-v">B_true</span>, <span class="pl-s1">w_ranges</span><span class="pl-c1">=</span><span class="pl-s1">w_ranges</span>)
+        <span class="pl-v">B_true_fn</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">path</span>.<span class="pl-c1">join</span>(<span class="pl-s1">save_data_path</span>, <span class="pl-s1">expt_name</span>, <span class="pl-s">f'graph<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">ii</span>:05<span class="pl-kos">}</span></span>_W_true.csv'</span>)
+        <span class="pl-s1">np</span>.<span class="pl-c1">savetxt</span>(<span class="pl-v">B_true_fn</span>, <span class="pl-v">B_true</span>, <span class="pl-s1">delimiter</span><span class="pl-c1">=</span><span class="pl-s">','</span>)
+        <span class="pl-k">for</span> <span class="pl-s1">jj</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-s1">num_data_per_graph</span>):
+            <span class="pl-c"># X = utils.simulate_linear_sem(W_true, n, sem_type, noise_scale=noise_scale)</span>
+            <span class="pl-c1">X</span> <span class="pl-c1">=</span> <span class="pl-s1">utils</span>.<span class="pl-c1">simulate_linear_sem</span>(<span class="pl-v">W_true</span>, <span class="pl-s1">n</span>, <span class="pl-s1">sem_type</span>, <span class="pl-s1">noise_scale</span><span class="pl-c1">=</span><span class="pl-s1">noise_scale</span>)
+            <span class="pl-v">X_fn</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">path</span>.<span class="pl-c1">join</span>(<span class="pl-s1">save_data_path</span>, <span class="pl-s1">expt_name</span>, <span class="pl-s">f'graph<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">ii</span>:05<span class="pl-kos">}</span></span>_data<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">jj</span>:05<span class="pl-kos">}</span></span>_X.csv'</span>)
+            <span class="pl-s1">np</span>.<span class="pl-c1">savetxt</span>(<span class="pl-v">X_fn</span>, <span class="pl-c1">X</span>, <span class="pl-s1">delimiter</span><span class="pl-c1">=</span><span class="pl-s">','</span>)
+
+<span class="pl-c"># 非线性</span>
+<span class="pl-k">def</span> <span class="pl-en">run_expt_</span>(<span class="pl-s1">save_data_path</span>, <span class="pl-s1">num_graph</span>, <span class="pl-s1">num_data_per_graph</span>, <span class="pl-s1">n</span>, <span class="pl-s1">d</span>, <span class="pl-s1">s0</span>, <span class="pl-s1">graph_type</span>, <span class="pl-s1">sem_type</span>, <span class="pl-s1">noise_scale</span>, <span class="pl-s1">expt_name</span>):
+    <span class="pl-s1">noise_scale</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">array</span>(<span class="pl-s1">noise_scale</span>)
+    <span class="pl-k">for</span> <span class="pl-s1">ii</span> <span class="pl-c1">in</span> <span class="pl-en">tqdm</span>(<span class="pl-en">range</span>(<span class="pl-s1">num_graph</span>)):
+        <span class="pl-v">B_true</span> <span class="pl-c1">=</span> <span class="pl-s1">utils</span>.<span class="pl-c1">simulate_dag</span>(<span class="pl-s1">d</span>, <span class="pl-s1">s0</span>, <span class="pl-s1">graph_type</span>)
+        <span class="pl-v">B_true_fn</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">path</span>.<span class="pl-c1">join</span>(<span class="pl-s1">save_data_path</span>, <span class="pl-s1">expt_name</span>, <span class="pl-s">f'graph<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">ii</span>:05<span class="pl-kos">}</span></span>_W_true.csv'</span>)
+        <span class="pl-s1">np</span>.<span class="pl-c1">savetxt</span>(<span class="pl-v">B_true_fn</span>, <span class="pl-v">B_true</span>, <span class="pl-s1">delimiter</span><span class="pl-c1">=</span><span class="pl-s">','</span>)
+        <span class="pl-k">for</span> <span class="pl-s1">jj</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-s1">num_data_per_graph</span>):
+            <span class="pl-c1">X</span> <span class="pl-c1">=</span> <span class="pl-s1">utils</span>.<span class="pl-c1">simulate_nonlinear_sem</span>(<span class="pl-v">B_true</span>, <span class="pl-s1">n</span>, <span class="pl-s1">sem_type</span>, <span class="pl-s1">noise_scale</span><span class="pl-c1">=</span><span class="pl-s1">noise_scale</span>)
+            <span class="pl-v">X_fn</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">path</span>.<span class="pl-c1">join</span>(<span class="pl-s1">save_data_path</span>, <span class="pl-s1">expt_name</span>, <span class="pl-s">f'graph<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">ii</span>:05<span class="pl-kos">}</span></span>_data<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">jj</span>:05<span class="pl-kos">}</span></span>_X.csv'</span>)
+            <span class="pl-s1">np</span>.<span class="pl-c1">savetxt</span>(<span class="pl-v">X_fn</span>, <span class="pl-c1">X</span>, <span class="pl-s1">delimiter</span><span class="pl-c1">=</span><span class="pl-s">','</span>)
+
+
+<span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">'__main__'</span>:
+    <span class="pl-en">main</span>()</pre></div>
+<p>网格搜索代码：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">notears</span> <span class="pl-k">import</span> <span class="pl-s1">linear</span>, <span class="pl-s1">nonlinear</span>, <span class="pl-s1">utils</span>
+<span class="pl-k">import</span> <span class="pl-s1">numpy</span> <span class="pl-k">as</span> <span class="pl-s1">np</span>
+
+<span class="pl-k">with</span> <span class="pl-en">open</span>(<span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\notears-master\data\equal_var\graph00001_W_true.csv'</span>) <span class="pl-k">as</span> <span class="pl-s1">f</span>:
+    <span class="pl-s1">line</span> <span class="pl-c1">=</span> <span class="pl-s1">f</span>.<span class="pl-c1">readline</span>()
+    <span class="pl-s1">data_array</span> <span class="pl-c1">=</span> []
+    <span class="pl-k">while</span> <span class="pl-s1">line</span>:
+        <span class="pl-s1">num</span> <span class="pl-c1">=</span> <span class="pl-en">list</span>(<span class="pl-en">map</span>(<span class="pl-s1">float</span>, <span class="pl-s1">line</span>.<span class="pl-c1">split</span>(<span class="pl-s">','</span>)))
+        <span class="pl-s1">data_array</span>.<span class="pl-c1">append</span>(<span class="pl-s1">num</span>)
+        <span class="pl-s1">line</span> <span class="pl-c1">=</span> <span class="pl-s1">f</span>.<span class="pl-c1">readline</span>()
+    <span class="pl-v">B_true</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">array</span>(<span class="pl-s1">data_array</span>)
+
+<span class="pl-k">with</span> <span class="pl-en">open</span>(<span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\notears-master\data\equal_var\graph00001_data00001_X.csv'</span>) <span class="pl-k">as</span> <span class="pl-s1">f</span>:
+    <span class="pl-s1">line</span> <span class="pl-c1">=</span> <span class="pl-s1">f</span>.<span class="pl-c1">readline</span>()
+    <span class="pl-s1">data_array</span> <span class="pl-c1">=</span> []
+    <span class="pl-k">while</span> <span class="pl-s1">line</span>:
+        <span class="pl-s1">num</span> <span class="pl-c1">=</span> <span class="pl-en">list</span>(<span class="pl-en">map</span>(<span class="pl-s1">float</span>, <span class="pl-s1">line</span>.<span class="pl-c1">split</span>(<span class="pl-s">','</span>)))
+        <span class="pl-s1">data_array</span>.<span class="pl-c1">append</span>(<span class="pl-s1">num</span>)
+        <span class="pl-s1">line</span> <span class="pl-c1">=</span> <span class="pl-s1">f</span>.<span class="pl-c1">readline</span>()
+    <span class="pl-c1">X</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">array</span>(<span class="pl-s1">data_array</span>)
+
+<span class="pl-s1">param_dist</span> <span class="pl-c1">=</span> {
+              <span class="pl-c"># "max_iter":[100, 200, 300, 400, 500],</span>
+              <span class="pl-s">"w_threshold"</span>:[<span class="pl-c1">0.05</span>, <span class="pl-c1">0.1</span>, <span class="pl-c1">0.15</span>, <span class="pl-c1">0.2</span>, <span class="pl-c1">0.25</span>, <span class="pl-c1">0.3</span>, <span class="pl-c1">0.35</span>, <span class="pl-c1">0.4</span>, <span class="pl-c1">0.45</span>, <span class="pl-c1">0.5</span>, <span class="pl-c1">0.55</span>, <span class="pl-c1">0.6</span>, <span class="pl-c1">0.65</span>, <span class="pl-c1">0.7</span>, <span class="pl-c1">0.75</span>, <span class="pl-c1">0.8</span>, <span class="pl-c1">0.85</span>, <span class="pl-c1">0.9</span>, <span class="pl-c1">0.95</span>],
+              <span class="pl-c"># "lambda0":[0.001,  0.003, 0.004, 0.005,  0.007, 0.009, 0.011, 0.013, 0.015, 0.017, 0.019, 0.021, 0.023, 0.025],</span>
+              <span class="pl-s">"lambda1"</span>:[<span class="pl-c1">0.01</span>,  <span class="pl-c1">0.02</span>, <span class="pl-c1">0.03</span>, <span class="pl-c1">0.04</span>,  <span class="pl-c1">0.05</span>, <span class="pl-c1">0.06</span>, <span class="pl-c1">0.07</span>, <span class="pl-c1">0.08</span>, <span class="pl-c1">0.09</span>, <span class="pl-c1">0.1</span>],
+              }
+
+<span class="pl-c"># MI = param_dist.get("max_iter")</span>
+<span class="pl-c1">WT</span> <span class="pl-c1">=</span> <span class="pl-s1">param_dist</span>.<span class="pl-c1">get</span>(<span class="pl-s">"w_threshold"</span>)
+<span class="pl-v">L1</span> <span class="pl-c1">=</span> <span class="pl-s1">param_dist</span>.<span class="pl-c1">get</span>(<span class="pl-s">"lambda1"</span>)
+
+<span class="pl-s1">result</span> <span class="pl-c1">=</span> []
+<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-en">len</span>(<span class="pl-v">L1</span>)):
+    <span class="pl-k">for</span> <span class="pl-s1">j</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-en">len</span>(<span class="pl-c1">WT</span>)):
+        <span class="pl-c">#notears</span>
+        <span class="pl-s1">lambda1</span> <span class="pl-c1">=</span> <span class="pl-v">L1</span>[<span class="pl-s1">i</span>]
+        <span class="pl-s1">w_threshold</span> <span class="pl-c1">=</span> <span class="pl-c1">WT</span>[<span class="pl-s1">j</span>]
+        <span class="pl-v">W_notears</span> <span class="pl-c1">=</span> <span class="pl-s1">linear</span>.<span class="pl-c1">notears_linear</span>(<span class="pl-c1">X</span>, <span class="pl-s1">lambda1</span><span class="pl-c1">=</span><span class="pl-s1">lambda1</span>, <span class="pl-s1">loss_type</span><span class="pl-c1">=</span><span class="pl-s">'l2'</span>,<span class="pl-s1">max_iter</span><span class="pl-c1">=</span><span class="pl-c1">300</span>,
+                                          <span class="pl-s1">w_threshold</span><span class="pl-c1">=</span><span class="pl-s1">w_threshold</span>)
+
+        <span class="pl-k">assert</span> <span class="pl-s1">utils</span>.<span class="pl-c1">is_dag</span>(<span class="pl-v">W_notears</span>)
+        <span class="pl-c">#eval</span>
+        <span class="pl-v">B_notears</span> <span class="pl-c1">=</span> (<span class="pl-v">W_notears</span> <span class="pl-c1">!=</span><span class="pl-c1">0</span>)
+        <span class="pl-s1">acc</span> <span class="pl-c1">=</span> <span class="pl-s1">utils</span>.<span class="pl-c1">count_accuracy</span>(<span class="pl-v">B_true</span>, <span class="pl-v">B_notears</span>)
+        <span class="pl-en">print</span>(<span class="pl-s">"----------------------------------"</span>)
+        <span class="pl-en">print</span>(<span class="pl-s">"lambda1:"</span>,<span class="pl-v">L1</span>[<span class="pl-s1">i</span>],<span class="pl-s">"w_threshold:"</span>,<span class="pl-c1">WT</span>[<span class="pl-s1">j</span>])
+        <span class="pl-s1">ret</span> <span class="pl-c1">=</span> [<span class="pl-v">L1</span>[<span class="pl-s1">i</span>],<span class="pl-c1">WT</span>[<span class="pl-s1">j</span>]]
+
+        <span class="pl-s1">v_met</span> <span class="pl-c1">=</span> <span class="pl-en">list</span>(<span class="pl-s1">acc</span>.<span class="pl-c1">values</span>())
+        <span class="pl-en">print</span>(<span class="pl-s">"fdr|tpr|shd|nnz"</span>)
+        <span class="pl-en">print</span>(<span class="pl-s1">v_met</span>)
+        <span class="pl-s1">ret</span> <span class="pl-c1">+=</span> <span class="pl-s1">v_met</span>
+        <span class="pl-s1">result</span>.<span class="pl-c1">append</span>(<span class="pl-s1">ret</span>)
+
+<span class="pl-k">import</span> <span class="pl-s1">csv</span>
+
+<span class="pl-c"># 创建csv writer对象</span>
+<span class="pl-k">with</span> <span class="pl-en">open</span>(<span class="pl-s">r'data\equal_var\res_save\r_l11.csv'</span>, <span class="pl-s">'w'</span>, <span class="pl-s1">newline</span><span class="pl-c1">=</span><span class="pl-s">''</span>) <span class="pl-k">as</span> <span class="pl-s1">file1</span>:
+    <span class="pl-s1">writer1</span> <span class="pl-c1">=</span> <span class="pl-s1">csv</span>.<span class="pl-c1">writer</span>(<span class="pl-s1">file1</span>)
+
+    <span class="pl-c"># 写入数据</span>
+    <span class="pl-k">for</span> <span class="pl-s1">row</span> <span class="pl-c1">in</span> <span class="pl-s1">result</span>:
+        <span class="pl-s1">writer1</span>.<span class="pl-c1">writerow</span>(<span class="pl-s1">row</span>)
+
+<span class="pl-c"># 数据</span>
+<span class="pl-s1">data</span> <span class="pl-c1">=</span> [[<span class="pl-s">"lambda1:"</span>,<span class="pl-s">"w_threshold:"</span>] <span class="pl-c1">+</span> <span class="pl-en">list</span>(<span class="pl-s1">acc</span>.<span class="pl-c1">keys</span>())]<span class="pl-c1">+</span><span class="pl-s1">result</span>
+
+<span class="pl-c"># 创建csv writer对象</span>
+<span class="pl-k">with</span> <span class="pl-en">open</span>(<span class="pl-s">r'data\equal_var\res_save\d_l11.csv'</span>, <span class="pl-s">'w'</span>, <span class="pl-s1">newline</span><span class="pl-c1">=</span><span class="pl-s">''</span>) <span class="pl-k">as</span> <span class="pl-s1">file2</span>:
+    <span class="pl-s1">writer2</span> <span class="pl-c1">=</span> <span class="pl-s1">csv</span>.<span class="pl-c1">writer</span>(<span class="pl-s1">file2</span>)
+
+    <span class="pl-c"># 写入数据</span>
+    <span class="pl-k">for</span> <span class="pl-s1">row</span> <span class="pl-c1">in</span> <span class="pl-s1">data</span>:
+        <span class="pl-s1">writer2</span>.<span class="pl-c1">writerow</span>(<span class="pl-s1">row</span>)</pre></div>
+<h4>（2）测试过程</h4>
+<p>体现测试的过程，至少将两次测试不成功（即：应用AMOS计算因果效应时，拟合指标不达标，学习到的因果图不准确）的例子进行呈现——此时预设的边的数量，超参数，结果图（因果图+AMOS计算结果）</p>
+<p>试验过程：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center"><strong>Lambda1:0.01  w_threshold:0.2</strong><br>  **边的数量：**<strong>16</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525202150037.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525202150037.png" alt="image-20240525202150037" style="max-width: 100%;"></a></td>
+</tr>
+<tr>
+<td align="center"><strong>Lambda1:0.01  w_threshold:0.2</strong><br>  **边的数量：****15</td>
+</tr>
+<tr>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525202250520.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525202250520.png" alt="image-20240525202250520" style="max-width: 100%;"></a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>最优解:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">**最优：**Lambda1:0.05  w_threshold:0.1<br>边的数量：16</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image014.jpg"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image014.jpg" alt="img" style="max-width: 100%;"></a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>B 已知真实DAG数据集：</h3>
+<p>主要体现不同算法在不同数据集上的超参数调优过程及对比过程</p>
+<p>要求对最后的比较结果作分析和评述</p>
+<h4>NOTEARS</h4>
+<p>网格搜索超参数优化：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
+<span class="pl-k">import</span> <span class="pl-s1">torch</span>.<span class="pl-s1">nn</span> <span class="pl-k">as</span> <span class="pl-s1">nn</span>
+<span class="pl-k">import</span> <span class="pl-s1">numpy</span> <span class="pl-k">as</span> <span class="pl-s1">np</span>
+<span class="pl-k">import</span> <span class="pl-s1">csv</span>
+<span class="pl-k">from</span> <span class="pl-s1">notears</span>.<span class="pl-s1">locally_connected</span> <span class="pl-k">import</span> <span class="pl-v">LocallyConnected</span>
+<span class="pl-k">from</span> <span class="pl-s1">notears</span>.<span class="pl-s1">lbfgsb_scipy</span> <span class="pl-k">import</span> <span class="pl-v">LBFGSBScipy</span>
+<span class="pl-k">from</span> <span class="pl-s1">notears</span>.<span class="pl-s1">trace_expm</span> <span class="pl-k">import</span> <span class="pl-s1">trace_expm</span>
+<span class="pl-k">import</span> <span class="pl-s1">notears</span>.<span class="pl-s1">utils</span> <span class="pl-k">as</span> <span class="pl-s1">ut</span>
+<span class="pl-k">from</span> <span class="pl-s1">notears</span> <span class="pl-k">import</span> <span class="pl-s1">linear</span>, <span class="pl-s1">nonlinear</span>, <span class="pl-s1">utils</span>
+
+
+<span class="pl-c"># Define NotearsMLP and NotearsSobolev classes here (as provided)</span>
+
+<span class="pl-k">def</span> <span class="pl-en">squared_loss</span>(<span class="pl-s1">output</span>, <span class="pl-s1">target</span>):
+    <span class="pl-s1">n</span> <span class="pl-c1">=</span> <span class="pl-s1">target</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">0</span>]
+    <span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-c1">0.5</span> <span class="pl-c1">/</span> <span class="pl-s1">n</span> <span class="pl-c1">*</span> <span class="pl-s1">torch</span>.<span class="pl-c1">sum</span>((<span class="pl-s1">output</span> <span class="pl-c1">-</span> <span class="pl-s1">target</span>) <span class="pl-c1">**</span> <span class="pl-c1">2</span>)
+    <span class="pl-k">return</span> <span class="pl-s1">loss</span>
+
+
+<span class="pl-k">def</span> <span class="pl-en">dual_ascent_step</span>(<span class="pl-s1">model</span>, <span class="pl-c1">X</span>, <span class="pl-s1">lambda1</span>, <span class="pl-s1">lambda2</span>, <span class="pl-s1">rho</span>, <span class="pl-s1">alpha</span>, <span class="pl-s1">h</span>, <span class="pl-s1">rho_max</span>):
+    <span class="pl-s1">h_new</span> <span class="pl-c1">=</span> <span class="pl-c1">None</span>
+    <span class="pl-s1">optimizer</span> <span class="pl-c1">=</span> <span class="pl-en">LBFGSBScipy</span>(<span class="pl-s1">model</span>.<span class="pl-c1">parameters</span>())
+    <span class="pl-v">X_torch</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">from_numpy</span>(<span class="pl-c1">X</span>)
+    <span class="pl-k">while</span> <span class="pl-s1">rho</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">rho_max</span>:
+        <span class="pl-k">def</span> <span class="pl-en">closure</span>():
+            <span class="pl-s1">optimizer</span>.<span class="pl-c1">zero_grad</span>()
+            <span class="pl-v">X_hat</span> <span class="pl-c1">=</span> <span class="pl-en">model</span>(<span class="pl-v">X_torch</span>)
+            <span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-en">squared_loss</span>(<span class="pl-v">X_hat</span>, <span class="pl-v">X_torch</span>)
+            <span class="pl-s1">h_val</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">h_func</span>()
+            <span class="pl-s1">penalty</span> <span class="pl-c1">=</span> <span class="pl-c1">0.5</span> <span class="pl-c1">*</span> <span class="pl-s1">rho</span> <span class="pl-c1">*</span> <span class="pl-s1">h_val</span> <span class="pl-c1">*</span> <span class="pl-s1">h_val</span> <span class="pl-c1">+</span> <span class="pl-s1">alpha</span> <span class="pl-c1">*</span> <span class="pl-s1">h_val</span>
+            <span class="pl-s1">l2_reg</span> <span class="pl-c1">=</span> <span class="pl-c1">0.5</span> <span class="pl-c1">*</span> <span class="pl-s1">lambda2</span> <span class="pl-c1">*</span> <span class="pl-s1">model</span>.<span class="pl-c1">l2_reg</span>()
+            <span class="pl-s1">l1_reg</span> <span class="pl-c1">=</span> <span class="pl-s1">lambda1</span> <span class="pl-c1">*</span> <span class="pl-s1">model</span>.<span class="pl-c1">fc1_l1_reg</span>()
+            <span class="pl-s1">primal_obj</span> <span class="pl-c1">=</span> <span class="pl-s1">loss</span> <span class="pl-c1">+</span> <span class="pl-s1">penalty</span> <span class="pl-c1">+</span> <span class="pl-s1">l2_reg</span> <span class="pl-c1">+</span> <span class="pl-s1">l1_reg</span>
+            <span class="pl-s1">primal_obj</span>.<span class="pl-c1">backward</span>()
+            <span class="pl-k">return</span> <span class="pl-s1">primal_obj</span>
+
+        <span class="pl-s1">optimizer</span>.<span class="pl-c1">step</span>(<span class="pl-s1">closure</span>)
+        <span class="pl-k">with</span> <span class="pl-s1">torch</span>.<span class="pl-c1">no_grad</span>():
+            <span class="pl-s1">h_new</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">h_func</span>().<span class="pl-c1">item</span>()
+        <span class="pl-k">if</span> <span class="pl-s1">h_new</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0.25</span> <span class="pl-c1">*</span> <span class="pl-s1">h</span>:
+            <span class="pl-s1">rho</span> <span class="pl-c1">*=</span> <span class="pl-c1">10</span>
+        <span class="pl-k">else</span>:
+            <span class="pl-k">break</span>
+    <span class="pl-s1">alpha</span> <span class="pl-c1">+=</span> <span class="pl-s1">rho</span> <span class="pl-c1">*</span> <span class="pl-s1">h_new</span>
+    <span class="pl-k">return</span> <span class="pl-s1">rho</span>, <span class="pl-s1">alpha</span>, <span class="pl-s1">h_new</span>
+
+
+<span class="pl-k">def</span> <span class="pl-en">notears_nonlinear</span>(<span class="pl-s1">model</span>: <span class="pl-s1">nn</span>.<span class="pl-c1">Module</span>,
+                      <span class="pl-c1">X</span>: <span class="pl-s1">np</span>.<span class="pl-c1">ndarray</span>,
+                      <span class="pl-s1">lambda1</span>: <span class="pl-smi">float</span> <span class="pl-c1">=</span> <span class="pl-c1">0.</span>,
+                      <span class="pl-s1">lambda2</span>: <span class="pl-smi">float</span> <span class="pl-c1">=</span> <span class="pl-c1">0.</span>,
+                      <span class="pl-s1">max_iter</span>: <span class="pl-smi">int</span> <span class="pl-c1">=</span> <span class="pl-c1">100</span>,
+                      <span class="pl-s1">h_tol</span>: <span class="pl-smi">float</span> <span class="pl-c1">=</span> <span class="pl-c1">1e-8</span>,
+                      <span class="pl-s1">rho_max</span>: <span class="pl-smi">float</span> <span class="pl-c1">=</span> <span class="pl-c1">1e+16</span>,
+                      <span class="pl-s1">w_threshold</span>: <span class="pl-smi">float</span> <span class="pl-c1">=</span> <span class="pl-c1">0.3</span>):
+    <span class="pl-s1">rho</span>, <span class="pl-s1">alpha</span>, <span class="pl-s1">h</span> <span class="pl-c1">=</span> <span class="pl-c1">1.0</span>, <span class="pl-c1">0.0</span>, <span class="pl-s1">np</span>.<span class="pl-c1">inf</span>
+    <span class="pl-k">for</span> <span class="pl-s1">_</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-s1">max_iter</span>):
+        <span class="pl-s1">rho</span>, <span class="pl-s1">alpha</span>, <span class="pl-s1">h</span> <span class="pl-c1">=</span> <span class="pl-en">dual_ascent_step</span>(<span class="pl-s1">model</span>, <span class="pl-c1">X</span>, <span class="pl-s1">lambda1</span>, <span class="pl-s1">lambda2</span>,
+                                         <span class="pl-s1">rho</span>, <span class="pl-s1">alpha</span>, <span class="pl-s1">h</span>, <span class="pl-s1">rho_max</span>)
+        <span class="pl-k">if</span> <span class="pl-s1">h</span> <span class="pl-c1">&lt;=</span> <span class="pl-s1">h_tol</span> <span class="pl-c1">or</span> <span class="pl-s1">rho</span> <span class="pl-c1">&gt;=</span> <span class="pl-s1">rho_max</span>:
+            <span class="pl-k">break</span>
+    <span class="pl-v">W_est</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">fc1_to_adj</span>()
+    <span class="pl-v">W_est</span>[<span class="pl-s1">np</span>.<span class="pl-c1">abs</span>(<span class="pl-v">W_est</span>) <span class="pl-c1">&lt;</span> <span class="pl-s1">w_threshold</span>] <span class="pl-c1">=</span> <span class="pl-c1">0</span>
+    <span class="pl-k">return</span> <span class="pl-v">W_est</span>
+
+
+<span class="pl-k">def</span> <span class="pl-en">main</span>():
+    <span class="pl-s1">torch</span>.<span class="pl-c1">set_default_dtype</span>(<span class="pl-s1">torch</span>.<span class="pl-c1">double</span>)
+    <span class="pl-s1">np</span>.<span class="pl-c1">set_printoptions</span>(<span class="pl-s1">precision</span><span class="pl-c1">=</span><span class="pl-c1">3</span>)
+    <span class="pl-s1">ut</span>.<span class="pl-c1">set_random_seed</span>(<span class="pl-c1">123</span>)
+
+    <span class="pl-c"># Load observational data from CSV file</span>
+    <span class="pl-c1">X</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">genfromtxt</span>(
+        <span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\exp_nonlinear_3\graph00001_data00000_X.csv'</span>,
+        <span class="pl-s1">delimiter</span><span class="pl-c1">=</span><span class="pl-s">','</span>, <span class="pl-s1">skip_header</span><span class="pl-c1">=</span><span class="pl-c1">1</span>)
+    <span class="pl-c"># Load ground truth DAG from CSV file</span>
+    <span class="pl-v">B_true</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">genfromtxt</span>(
+        <span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\exp_nonlinear_3\graph00001_W_true.csv'</span>,
+        <span class="pl-s1">delimiter</span><span class="pl-c1">=</span><span class="pl-s">','</span>)
+
+    <span class="pl-s1">d</span> <span class="pl-c1">=</span> <span class="pl-c1">X</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">1</span>]
+
+    <span class="pl-c"># Hyperparameters for grid search</span>
+    <span class="pl-s1">param_dist</span> <span class="pl-c1">=</span> {
+        <span class="pl-s">"w_threshold"</span>: [<span class="pl-c1">0.05</span>,<span class="pl-c1">0.10</span>,<span class="pl-c1">0.15</span>,<span class="pl-c1">0.2</span>, <span class="pl-c1">0.25</span>, <span class="pl-c1">0.3</span>, <span class="pl-c1">0.35</span>, <span class="pl-c1">0.4</span>, <span class="pl-c1">0.45</span>, <span class="pl-c1">0.5</span>],
+        <span class="pl-s">"lambda1"</span>: [<span class="pl-c1">0.01</span>, <span class="pl-c1">0.02</span>, <span class="pl-c1">0.03</span>,  <span class="pl-c1">0.04</span>, <span class="pl-c1">0.05</span>],
+        <span class="pl-s">"lambda2"</span>: [<span class="pl-c1">0.01</span>, <span class="pl-c1">0.02</span>, <span class="pl-c1">0.03</span>, <span class="pl-c1">0.04</span>, <span class="pl-c1">0.05</span>]
+    }
+
+    <span class="pl-c1">WT</span> <span class="pl-c1">=</span> <span class="pl-s1">param_dist</span>[<span class="pl-s">"w_threshold"</span>]
+    <span class="pl-v">L1</span> <span class="pl-c1">=</span> <span class="pl-s1">param_dist</span>[<span class="pl-s">"lambda1"</span>]
+    <span class="pl-v">L2</span> <span class="pl-c1">=</span> <span class="pl-s1">param_dist</span>[<span class="pl-s">"lambda2"</span>]
+
+    <span class="pl-s1">result</span> <span class="pl-c1">=</span> []
+    <span class="pl-k">for</span> <span class="pl-s1">lambda1</span> <span class="pl-c1">in</span> <span class="pl-v">L1</span>:
+        <span class="pl-k">for</span> <span class="pl-s1">lambda2</span> <span class="pl-c1">in</span> <span class="pl-v">L2</span>:
+            <span class="pl-k">for</span> <span class="pl-s1">w_threshold</span> <span class="pl-c1">in</span> <span class="pl-c1">WT</span>:
+                <span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-s1">nonlinear</span>.<span class="pl-c1">NotearsMLP</span>(<span class="pl-s1">dims</span><span class="pl-c1">=</span>[<span class="pl-s1">d</span>, <span class="pl-c1">10</span>, <span class="pl-c1">1</span>], <span class="pl-s1">bias</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+                <span class="pl-v">W_est</span> <span class="pl-c1">=</span> <span class="pl-en">notears_nonlinear</span>(<span class="pl-s1">model</span>, <span class="pl-c1">X</span>, <span class="pl-s1">lambda1</span><span class="pl-c1">=</span><span class="pl-s1">lambda1</span>, <span class="pl-s1">lambda2</span><span class="pl-c1">=</span><span class="pl-s1">lambda2</span>, <span class="pl-s1">w_threshold</span><span class="pl-c1">=</span><span class="pl-s1">w_threshold</span>)
+
+                <span class="pl-c"># Ensure W_est is a DAG</span>
+                <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">ut</span>.<span class="pl-c1">is_dag</span>(<span class="pl-v">W_est</span>):
+                    <span class="pl-k">continue</span>  <span class="pl-c"># Skip this combination if it's not a DAG</span>
+
+                <span class="pl-c"># Save results for each combination</span>
+                <span class="pl-s1">ret</span> <span class="pl-c1">=</span> [<span class="pl-s1">lambda1</span>, <span class="pl-s1">lambda2</span>, <span class="pl-s1">w_threshold</span>]
+                <span class="pl-s1">ret</span> <span class="pl-c1">+=</span> <span class="pl-en">list</span>(<span class="pl-s1">ut</span>.<span class="pl-c1">count_accuracy</span>(<span class="pl-v">B_true</span>, <span class="pl-v">W_est</span> <span class="pl-c1">!=</span> <span class="pl-c1">0</span>).<span class="pl-c1">values</span>())
+                <span class="pl-s1">result</span>.<span class="pl-c1">append</span>(<span class="pl-s1">ret</span>)
+
+                <span class="pl-c"># Print results for debugging</span>
+                <span class="pl-en">print</span>(<span class="pl-s">f"lambda1: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">lambda1</span><span class="pl-kos">}</span></span>, lambda2: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">lambda2</span><span class="pl-kos">}</span></span>, w_threshold: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">w_threshold</span><span class="pl-kos">}</span></span>"</span>)
+                <span class="pl-en">print</span>(<span class="pl-s">"fdr|tpr|shd|nnz"</span>)
+                <span class="pl-en">print</span>(<span class="pl-en">list</span>(<span class="pl-s1">ut</span>.<span class="pl-c1">count_accuracy</span>(<span class="pl-v">B_true</span>, <span class="pl-v">W_est</span> <span class="pl-c1">!=</span> <span class="pl-c1">0</span>).<span class="pl-c1">values</span>()))
+
+    <span class="pl-c"># Save results to CSV files</span>
+    <span class="pl-s1">headers</span> <span class="pl-c1">=</span> [<span class="pl-s">"lambda1"</span>, <span class="pl-s">"lambda2"</span>, <span class="pl-s">"w_threshold"</span>] <span class="pl-c1">+</span> <span class="pl-en">list</span>(<span class="pl-s1">ut</span>.<span class="pl-c1">count_accuracy</span>(<span class="pl-v">B_true</span>, <span class="pl-v">W_est</span> <span class="pl-c1">!=</span> <span class="pl-c1">0</span>).<span class="pl-c1">keys</span>())
+    <span class="pl-s1">data</span> <span class="pl-c1">=</span> [<span class="pl-s1">headers</span>] <span class="pl-c1">+</span> <span class="pl-s1">result</span>
+
+    <span class="pl-k">with</span> <span class="pl-en">open</span>(
+            <span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\exp_nonlinear_3\grid_search_results1.csv'</span>,
+            <span class="pl-s">'w'</span>, <span class="pl-s1">newline</span><span class="pl-c1">=</span><span class="pl-s">''</span>) <span class="pl-k">as</span> <span class="pl-s1">file</span>:
+        <span class="pl-s1">writer</span> <span class="pl-c1">=</span> <span class="pl-s1">csv</span>.<span class="pl-c1">writer</span>(<span class="pl-s1">file</span>)
+        <span class="pl-k">for</span> <span class="pl-s1">row</span> <span class="pl-c1">in</span> <span class="pl-s1">data</span>:
+            <span class="pl-s1">writer</span>.<span class="pl-c1">writerow</span>(<span class="pl-s1">row</span>)
+
+
+<span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">'__main__'</span>:
+    <span class="pl-en">main</span>()
+    <span class="pl-en">print</span>(<span class="pl-s">'done'</span>)</pre></div>
+<p>优化结果：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th>lambda1</th>
+<th>lambda2</th>
+<th>w_threshold</th>
+<th>fdr</th>
+<th>tpr</th>
+<th>fpr</th>
+<th>shd</th>
+<th>nnz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exp_nonlinear_1</td>
+<td>0.02</td>
+<td>0.01</td>
+<td>0.35</td>
+<td>0.04</td>
+<td>0.888889</td>
+<td>0.019608</td>
+<td>4</td>
+<td>25</td>
+</tr>
+<tr>
+<td>exp_nonlinear_2</td>
+<td>0.01</td>
+<td>0.02</td>
+<td>0.4</td>
+<td>0.058824</td>
+<td>0.592593</td>
+<td>0.019608</td>
+<td>11</td>
+<td>17</td>
+</tr>
+<tr>
+<td>exp_nonlinear_3</td>
+<td>0.01</td>
+<td>0.02</td>
+<td>0.25</td>
+<td>0.2</td>
+<td>0.888889</td>
+<td>0.117647</td>
+<td>9</td>
+<td>30</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h4>GraN-DAG</h4>
+<p>网格搜索超参数优化：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">castle</span>.<span class="pl-s1">common</span> <span class="pl-k">import</span> <span class="pl-v">GraphDAG</span>
+<span class="pl-k">from</span> <span class="pl-s1">castle</span>.<span class="pl-s1">metrics</span> <span class="pl-k">import</span> <span class="pl-v">MetricsDAG</span>
+<span class="pl-k">from</span> <span class="pl-s1">castle</span>.<span class="pl-s1">algorithms</span> <span class="pl-k">import</span> <span class="pl-v">GraNDAG</span>
+<span class="pl-k">import</span> <span class="pl-s1">numpy</span> <span class="pl-k">as</span> <span class="pl-s1">np</span>
+<span class="pl-k">import</span> <span class="pl-s1">pandas</span> <span class="pl-k">as</span> <span class="pl-s1">pd</span>
+<span class="pl-k">import</span> <span class="pl-s1">itertools</span>
+
+<span class="pl-c"># Set random seed for reproducibility</span>
+<span class="pl-s1">np</span>.<span class="pl-c1">random</span>.<span class="pl-c1">seed</span>(<span class="pl-c1">42</span>)
+
+<span class="pl-c"># Load observational data from CSV file</span>
+<span class="pl-c1">X</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">genfromtxt</span>(
+    <span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\exp_nonlinear_1\graph00001_data00000_X.csv'</span>,
+    <span class="pl-s1">delimiter</span><span class="pl-c1">=</span><span class="pl-s">','</span>, <span class="pl-s1">skip_header</span><span class="pl-c1">=</span><span class="pl-c1">1</span>)
+
+<span class="pl-c"># Load ground truth DAG from CSV file</span>
+<span class="pl-v">B_true</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">genfromtxt</span>(
+    <span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\exp_nonlinear_1\graph00001_W_true.csv'</span>,
+    <span class="pl-s1">delimiter</span><span class="pl-c1">=</span><span class="pl-s">','</span>)
+
+<span class="pl-c"># Normalize data</span>
+<span class="pl-s1">normalize</span> <span class="pl-c1">=</span> <span class="pl-c1">True</span>
+<span class="pl-k">if</span> <span class="pl-s1">normalize</span>:
+    <span class="pl-v">X_mean</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">mean</span>(<span class="pl-c1">X</span>, <span class="pl-s1">axis</span><span class="pl-c1">=</span><span class="pl-c1">0</span>, <span class="pl-s1">keepdims</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+    <span class="pl-v">X_std</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">std</span>(<span class="pl-c1">X</span>, <span class="pl-s1">axis</span><span class="pl-c1">=</span><span class="pl-c1">0</span>, <span class="pl-s1">keepdims</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+    <span class="pl-c1">X</span> <span class="pl-c1">=</span> (<span class="pl-c1">X</span> <span class="pl-c1">-</span> <span class="pl-v">X_mean</span>) <span class="pl-c1">/</span> <span class="pl-v">X_std</span>
+
+<span class="pl-c"># Check for NaN values in the data</span>
+<span class="pl-k">if</span> <span class="pl-s1">np</span>.<span class="pl-c1">isnan</span>(<span class="pl-c1">X</span>).<span class="pl-c1">any</span>():
+    <span class="pl-k">raise</span> <span class="pl-en">ValueError</span>(<span class="pl-s">"Input data contains NaN values. Please check the data preprocessing steps."</span>)
+
+<span class="pl-c"># Define hyperparameter grid</span>
+<span class="pl-s1">param_grid</span> <span class="pl-c1">=</span> {
+    <span class="pl-s">'model_name'</span>: [<span class="pl-s">'NonLinGauss'</span>],
+    <span class="pl-s">'nonlinear'</span>: [<span class="pl-s">'leaky-relu'</span>],
+    <span class="pl-s">'optimizer'</span>: [<span class="pl-s">'sgd'</span>],
+    <span class="pl-s">'norm_prod'</span>: [<span class="pl-s">'paths'</span>],
+    <span class="pl-s">'device_type'</span>: [<span class="pl-s">'cpu'</span>],
+    <span class="pl-s">'random_seed'</span>: [<span class="pl-c1">42</span>],
+    <span class="pl-s">'normalize'</span>: [<span class="pl-s1">normalize</span>],
+    <span class="pl-s">'input_dim'</span>: [<span class="pl-c1">X</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">1</span>]],
+    <span class="pl-s">'hidden_num'</span>: [<span class="pl-c1">2</span>, <span class="pl-c1">3</span>,<span class="pl-c1">4</span>],
+    <span class="pl-s">'hidden_dim'</span>: [<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">30</span>],
+    <span class="pl-s">'batch_size'</span>: [<span class="pl-c1">64</span>,<span class="pl-c1">128</span>],
+    <span class="pl-s">'lr'</span>: [<span class="pl-c1">0.0001</span>],
+    <span class="pl-s">'iterations'</span>: [<span class="pl-c1">1000</span>]
+}
+
+<span class="pl-c"># Create a list to store results</span>
+<span class="pl-s1">results</span> <span class="pl-c1">=</span> []
+
+<span class="pl-c"># Perform grid search</span>
+<span class="pl-s1">keys</span>, <span class="pl-s1">values</span> <span class="pl-c1">=</span> <span class="pl-en">zip</span>(<span class="pl-c1">*</span><span class="pl-s1">param_grid</span>.<span class="pl-c1">items</span>())
+<span class="pl-k">for</span> <span class="pl-s1">v</span> <span class="pl-c1">in</span> <span class="pl-s1">itertools</span>.<span class="pl-c1">product</span>(<span class="pl-c1">*</span><span class="pl-s1">values</span>):
+    <span class="pl-s1">params</span> <span class="pl-c1">=</span> <span class="pl-en">dict</span>(<span class="pl-en">zip</span>(<span class="pl-s1">keys</span>, <span class="pl-s1">v</span>))
+
+    <span class="pl-k">try</span>:
+        <span class="pl-c"># Create and train GraNDAG instance</span>
+        <span class="pl-s1">gnd</span> <span class="pl-c1">=</span> <span class="pl-en">GraNDAG</span>(<span class="pl-c1">**</span><span class="pl-s1">params</span>)
+        <span class="pl-s1">gnd</span>.<span class="pl-c1">learn</span>(<span class="pl-s1">data</span><span class="pl-c1">=</span><span class="pl-c1">X</span>)
+
+        <span class="pl-c"># Evaluate the learned DAG</span>
+        <span class="pl-s1">mm</span> <span class="pl-c1">=</span> <span class="pl-en">MetricsDAG</span>(<span class="pl-s1">gnd</span>.<span class="pl-c1">causal_matrix</span>, <span class="pl-v">B_true</span>)
+
+        <span class="pl-c"># Store results</span>
+        <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">params</span>.<span class="pl-c1">copy</span>()
+        <span class="pl-s1">result</span>.<span class="pl-c1">update</span>(<span class="pl-s1">mm</span>.<span class="pl-c1">metrics</span>)
+        <span class="pl-s1">results</span>.<span class="pl-c1">append</span>(<span class="pl-s1">result</span>)
+
+        <span class="pl-c"># Print current result</span>
+        <span class="pl-en">print</span>(<span class="pl-s">f"Evaluated params: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">params</span><span class="pl-kos">}</span></span>"</span>)
+        <span class="pl-en">print</span>(<span class="pl-s">f"Metrics: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">mm</span>.<span class="pl-c1">metrics</span><span class="pl-kos">}</span></span><span class="pl-cce">\n</span>"</span>)
+
+    <span class="pl-k">except</span> <span class="pl-v">ValueError</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
+        <span class="pl-en">print</span>(<span class="pl-s">f"Error with params: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">params</span><span class="pl-kos">}</span></span>"</span>)
+        <span class="pl-en">print</span>(<span class="pl-s1">e</span>)
+        <span class="pl-k">continue</span>
+
+<span class="pl-c"># Save results to CSV</span>
+<span class="pl-s1">results_df</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">DataFrame</span>(<span class="pl-s1">results</span>)
+<span class="pl-s1">results_df</span>.<span class="pl-c1">to_csv</span>(<span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\exp_nonlinear_1\pc_results.csv'</span>,
+                  <span class="pl-s1">index</span><span class="pl-c1">=</span><span class="pl-c1">False</span>)
+
+<span class="pl-en">print</span>(<span class="pl-s">"Grid search completed. Results saved to CSV."</span>)</pre></div>
+<p>优化结果</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th>hidden_num</th>
+<th>hidden_dim</th>
+<th>batch_size</th>
+<th>fdr</th>
+<th>tpr</th>
+<th>fpr</th>
+<th>shd</th>
+<th>nnz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exp_nonlinear_1</td>
+<td>2</td>
+<td>10</td>
+<td>128</td>
+<td>0.5556</td>
+<td>0.1481</td>
+<td>0.098</td>
+<td>28</td>
+<td>9</td>
+</tr>
+<tr>
+<td>exp_nonlinear_2</td>
+<td>4</td>
+<td>10</td>
+<td>64</td>
+<td>0.6667</td>
+<td>0.1481</td>
+<td>0.1569</td>
+<td>28</td>
+<td>12</td>
+</tr>
+<tr>
+<td>exp_nonlinear_3</td>
+<td>3</td>
+<td>20</td>
+<td>64</td>
+<td>0.8</td>
+<td>0.0741</td>
+<td>0.1569</td>
+<td>30</td>
+<td>10</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h4>PC</h4>
+<p>贝叶斯搜索超参数优化：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">pandas</span> <span class="pl-k">as</span> <span class="pl-s1">pd</span>
+<span class="pl-k">import</span> <span class="pl-s1">numpy</span> <span class="pl-k">as</span> <span class="pl-s1">np</span>
+<span class="pl-k">from</span> <span class="pl-s1">castle</span>.<span class="pl-s1">algorithms</span> <span class="pl-k">import</span> <span class="pl-c1">PC</span>
+<span class="pl-k">from</span> <span class="pl-s1">castle</span>.<span class="pl-s1">metrics</span> <span class="pl-k">import</span> <span class="pl-v">MetricsDAG</span>
+<span class="pl-k">from</span> <span class="pl-s1">bayes_opt</span> <span class="pl-k">import</span> <span class="pl-v">BayesianOptimization</span>
+<span class="pl-k">import</span> <span class="pl-s1">logging</span>
+
+<span class="pl-c"># Set up logging</span>
+<span class="pl-s1">logging</span>.<span class="pl-c1">basicConfig</span>(<span class="pl-s1">level</span><span class="pl-c1">=</span><span class="pl-s1">logging</span>.<span class="pl-c1">INFO</span>)
+<span class="pl-s1">logger</span> <span class="pl-c1">=</span> <span class="pl-s1">logging</span>.<span class="pl-c1">getLogger</span>(<span class="pl-s1">__name__</span>)
+
+<span class="pl-c"># 读取CSV数据文件</span>
+<span class="pl-s1">data_path</span> <span class="pl-c1">=</span> <span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\exp_nonlinear_3\graph00001_data00000_X.csv'</span>
+<span class="pl-s1">data</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_csv</span>(<span class="pl-s1">data_path</span>)
+
+<span class="pl-c"># 读取真实的因果图</span>
+<span class="pl-s1">true_graph_path</span> <span class="pl-c1">=</span> <span class="pl-s">r'D:\Desktop\TBFILE\学习\群体智能\群体智能第二次实验\exp_nonlinear_3\graph00001_W_true.csv'</span>
+<span class="pl-s1">true_dag</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_csv</span>(<span class="pl-s1">true_graph_path</span>, <span class="pl-s1">header</span><span class="pl-c1">=</span><span class="pl-c1">None</span>).<span class="pl-c1">values</span>
+
+<span class="pl-c"># 将数据转换为numpy数组</span>
+<span class="pl-c1">X</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-c1">values</span>
+
+<span class="pl-c"># 定义目标函数</span>
+<span class="pl-k">def</span> <span class="pl-en">objective</span>(<span class="pl-s1">alpha</span>):
+    <span class="pl-k">try</span>:
+        <span class="pl-c"># 设置新的alpha值并初始化PC算法</span>
+        <span class="pl-s1">pc</span> <span class="pl-c1">=</span> <span class="pl-en">PC</span>(<span class="pl-s1">variant</span><span class="pl-c1">=</span><span class="pl-s">'stable'</span>, <span class="pl-s1">alpha</span><span class="pl-c1">=</span><span class="pl-s1">alpha</span>)
+
+        <span class="pl-c"># 学习因果结构</span>
+        <span class="pl-s1">pc</span>.<span class="pl-c1">learn</span>(<span class="pl-c1">X</span>)
+
+        <span class="pl-c"># 评估学习到的因果矩阵</span>
+        <span class="pl-s1">met</span> <span class="pl-c1">=</span> <span class="pl-en">MetricsDAG</span>(<span class="pl-s1">pc</span>.<span class="pl-c1">causal_matrix</span>, <span class="pl-s1">true_dag</span>)
+
+        <span class="pl-c"># 记录SHD值</span>
+        <span class="pl-s1">shd</span> <span class="pl-c1">=</span> <span class="pl-s1">met</span>.<span class="pl-c1">metrics</span>[<span class="pl-s">'shd'</span>]
+        
+        <span class="pl-s1">logger</span>.<span class="pl-c1">info</span>(<span class="pl-s">f'Alpha: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">alpha</span><span class="pl-kos">}</span></span>, SHD: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">shd</span><span class="pl-kos">}</span></span>'</span>)
+
+        <span class="pl-c"># 返回SHD的负值，因为贝叶斯优化是一个最大化器，我们希望最小化SHD</span>
+        <span class="pl-k">return</span> <span class="pl-c1">-</span><span class="pl-s1">shd</span>
+    <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
+        <span class="pl-s1">logger</span>.<span class="pl-c1">error</span>(<span class="pl-s">f"Error with alpha: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">alpha</span><span class="pl-kos">}</span></span>"</span>)
+        <span class="pl-s1">logger</span>.<span class="pl-c1">error</span>(<span class="pl-s1">e</span>)
+        <span class="pl-k">return</span> <span class="pl-c1">-</span><span class="pl-en">float</span>(<span class="pl-s">'inf'</span>)
+
+<span class="pl-c"># 设置贝叶斯优化的参数范围</span>
+<span class="pl-s1">pbounds</span> <span class="pl-c1">=</span> {<span class="pl-s">'alpha'</span>: (<span class="pl-c1">0.01</span>, <span class="pl-c1">0.1</span>)}
+
+<span class="pl-c"># 初始化贝叶斯优化器</span>
+<span class="pl-s1">optimizer</span> <span class="pl-c1">=</span> <span class="pl-en">BayesianOptimization</span>(
+    <span class="pl-s1">f</span><span class="pl-c1">=</span><span class="pl-s1">objective</span>,
+    <span class="pl-s1">pbounds</span><span class="pl-c1">=</span><span class="pl-s1">pbounds</span>,
+    <span class="pl-s1">random_state</span><span class="pl-c1">=</span><span class="pl-c1">42</span>
+)
+
+<span class="pl-c"># 执行优化过程</span>
+<span class="pl-s1">optimizer</span>.<span class="pl-c1">maximize</span>(<span class="pl-s1">n_iter</span><span class="pl-c1">=</span><span class="pl-c1">20</span>)
+
+<span class="pl-c"># 获取最佳参数</span>
+<span class="pl-s1">best_alpha</span> <span class="pl-c1">=</span> <span class="pl-s1">optimizer</span>.<span class="pl-c1">max</span>[<span class="pl-s">'params'</span>][<span class="pl-s">'alpha'</span>]
+<span class="pl-s1">best_shd</span> <span class="pl-c1">=</span> <span class="pl-c1">-</span><span class="pl-s1">optimizer</span>.<span class="pl-c1">max</span>[<span class="pl-s">'target'</span>]
+
+<span class="pl-en">print</span>(<span class="pl-s">f'<span class="pl-cce">\n</span>Best alpha: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">best_alpha</span><span class="pl-kos">}</span></span>, with SHD: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">best_shd</span><span class="pl-kos">}</span></span>'</span>)</pre></div>
+<p>优化结果：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>pc</th>
+<th>alpha</th>
+<th>fdr</th>
+<th>tpr</th>
+<th>fpr</th>
+<th>shd</th>
+<th>nnz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exp_nonlinear_1</td>
+<td>0.04370861069626263</td>
+<td>0.2857</td>
+<td>0.3704</td>
+<td>0.0784</td>
+<td>19</td>
+<td>14</td>
+</tr>
+<tr>
+<td>exp_nonlinear_2</td>
+<td>0.09556428757689246</td>
+<td>0.4118</td>
+<td>0.3704</td>
+<td>0.1373</td>
+<td>20</td>
+<td>17</td>
+</tr>
+<tr>
+<td>exp_nonlinear_3</td>
+<td>0.04370861069626263</td>
+<td>0.3889</td>
+<td>0.4074</td>
+<td>0.1373</td>
+<td>18</td>
+<td>18</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>8、结果展示</h2>
+<h3>A.未知真实DAG数据集：</h3>
+<h4>（0）超参数优化图/或表格</h4>
+<p><strong>体现超参数优化过程</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525184830992.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525184830992.png" alt="image-20240525184830992" style="max-width: 100%;"></a></th>
+</tr>
+</thead>
+</table></markdown-accessiblity-table>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image008.jpg"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image008.jpg" alt="img" style="max-width: 100%;"></a></p>
+<h4>（1）因果图：</h4>
+<p><strong>坐标点图、连线图或其他形式，可自行设计</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525184853909.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525184853909.png" alt="image-20240525184853909" style="max-width: 100%;"></a></th>
+<th><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image012.jpg"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image012.jpg" alt="img" style="max-width: 100%;"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h4>（2）AMOS计算结果图：</h4>
+<p>截图呈现</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>**最优：**lambda1:0.05  w_threshold:0.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image014.jpg"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image014.jpg" alt="img" style="max-width: 100%;"></a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>路径效应计算结果截图，包含总效应/直接效应/间接效应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525190241153.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/image-20240525190241153.png" alt="image-20240525190241153" style="max-width: 100%;"></a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image018.jpg"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image018.jpg" alt="img" style="max-width: 100%;"></a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image020.jpg"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/clip_image020.jpg" alt="img" style="max-width: 100%;"></a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>B.已知真实DAG数据集：</h3>
+<h4>（1）因果图：</h4>
+<p><strong>给出各个算法在不同数据集上学习到的最优</strong>DAG</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><a target="_blank" rel="noopener noreferrer nofollow" href="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/20240526024428.png"><img src="https://raw.githubusercontent.com/tanyunhao/picture/master/picture/20240526024428.png" alt="image.png" style="max-width: 100%;"></a></th>
+</tr>
+</thead>
+</table></markdown-accessiblity-table>
+<h4>（2）算法性能比较结果呈现：</h4>
+<p><strong>通过表格呈现比较结果</strong><br>
+exp_nonlinear_1：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th><strong>fdr</strong></th>
+<th><strong>tpr</strong></th>
+<th>fpr</th>
+<th><strong>shd</strong></th>
+<th><strong>nnz</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NOTEARS</strong></td>
+<td>0.04</td>
+<td>0.888889</td>
+<td>0.019608</td>
+<td>4</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>GraN-DAG</strong></td>
+<td>0.5556</td>
+<td>0.1481</td>
+<td>0.098</td>
+<td>28</td>
+<td>9</td>
+</tr>
+<tr>
+<td><strong>PC</strong></td>
+<td>0.4118</td>
+<td>0.3704</td>
+<td>0.1373</td>
+<td>20</td>
+<td>17</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>exp_nonlinear_2：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th><strong>fdr</strong></th>
+<th><strong>tpr</strong></th>
+<th>fpr</th>
+<th><strong>shd</strong></th>
+<th><strong>nnz</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NOTEARS</strong></td>
+<td>0.058824</td>
+<td>0.592593</td>
+<td>0.019608</td>
+<td>11</td>
+<td>17</td>
+</tr>
+<tr>
+<td><strong>GraN-DAG</strong></td>
+<td>0.6667</td>
+<td>0.1481</td>
+<td>0.1569</td>
+<td>28</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>PC</strong></td>
+<td>0.4118</td>
+<td>0.3704</td>
+<td>0.1373</td>
+<td>20</td>
+<td>17</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>exp_nonlinear_3：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th><strong>fdr</strong></th>
+<th><strong>tpr</strong></th>
+<th>fpr</th>
+<th><strong>shd</strong></th>
+<th><strong>nnz</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NOTEARS</strong></td>
+<td>0.2</td>
+<td>0.888889</td>
+<td>0.117647</td>
+<td>9</td>
+<td>30</td>
+</tr>
+<tr>
+<td><strong>GraN-DAG</strong></td>
+<td>0.8</td>
+<td>0.0741</td>
+<td>0.1569</td>
+<td>30</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>PC</strong></td>
+<td>0.3889</td>
+<td>0.4074</td>
+<td>0.1373</td>
+<td>18</td>
+<td>18</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>通过上面表格比较可知：</p>
+<p>NOTEARS 算法在所有三个数据集上都表现最佳,SHD 最低,能够更准确地学习到真实的因果关系结构</p>
+<p>而GraN-DAG、PC算法表现不佳的原因可能是因为该数据集不适合这两种算法，从而导致这两种算法不能很好的学习因果关系结构</p>
+<p>代码下载地址：<a href="https://www.123pan.com/s/WlFzVv-gdRph.html" rel="nofollow">https://www.123pan.com/s/WlFzVv-gdRph.html</a></p></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://tanyunhao.github.io">谭云浩</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>

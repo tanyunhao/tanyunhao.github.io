@@ -1,5 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>谭云浩</title><link>https://tanyunhao.github.io</link><description>童话是一种生活态度，仅此而已。</description><copyright>谭云浩</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/tanyunhao/picture/master/简约小人开心大笑_爱给网_aigei_com.gif</url><title>avatar</title><link>https://tanyunhao.github.io</link></image><lastBuildDate>Wed, 29 Oct 2025 16:07:42 +0000</lastBuildDate><managingEditor>谭云浩</managingEditor><ttl>60</ttl><webMaster>谭云浩</webMaster><item><title>影院票务管理系统oracle</title><link>https://tanyunhao.github.io/post/ying-yuan-piao-wu-guan-li-xi-tong-oracle.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>谭云浩</title><link>https://tanyunhao.github.io</link><description>童话是一种生活态度，仅此而已。</description><copyright>谭云浩</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/tanyunhao/picture/master/简约小人开心大笑_爱给网_aigei_com.gif</url><title>avatar</title><link>https://tanyunhao.github.io</link></image><lastBuildDate>Sun, 02 Nov 2025 14:12:45 +0000</lastBuildDate><managingEditor>谭云浩</managingEditor><ttl>60</ttl><webMaster>谭云浩</webMaster><item><title>因果推理算法及工具应用</title><link>https://tanyunhao.github.io/post/yin-guo-tui-li-suan-fa-ji-gong-ju-ying-yong.html</link><description>
+&lt;div style='text-align: center;'&gt;
+    &lt;span style='font-size: 32px;'&gt;实验二 因果推理算法及工具应用&lt;/span&gt;
+&lt;/div&gt;
+
+
+## 1、实验目的
+
+（1）  学习“NOTEARS/ PC/GraN-DAG”等因果发现算法在python中的使用与实现；
+
+（2）  学习AMOS软件，计算因果效应
+
+（3）  学会用Grid Search/BOHB等方法或工具进行超参数调优
+
+（4）  通过多项指标比较比较算法效果
+
+（5）  结果可视化与展示。</description><guid isPermaLink="true">https://tanyunhao.github.io/post/yin-guo-tui-li-suan-fa-ji-gong-ju-ying-yong.html</guid><pubDate>Sun, 02 Nov 2025 14:12:13 +0000</pubDate></item><item><title>影院票务管理系统oracle</title><link>https://tanyunhao.github.io/post/ying-yuan-piao-wu-guan-li-xi-tong-oracle.html</link><description>
 源码下载分享https://www.123865.com/ps/WlFzVv-3Kuph
 用户表:编号，用户名，密码，邮箱，角色，用户头像；
 
